@@ -5,11 +5,12 @@
   "main": "index.js",
   "dependencies": {
     "@typespec/compiler": "catalog:",
-    "typespec-zod": "workspace:~"
+    "typespec-mcp": "workspace:~",
+    "zod": "^3.24.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsp compile main.tsp --emit typespec-zod"
+    "build": "tsp compile main.tsp --emit typespec-mcp"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,34 @@
+{
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "printWidth": 100,
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "plugins": [
+    "@typespec/prettier-plugin-typespec",
+    "prettier-plugin-organize-imports",
+    "@alloy-js/prettier-plugin-alloy"
+  ],
+  "overrides": [
+    {
+      "files": "*.tsp",
+      "options": {
+        "parser": "typespec"
+      }
+    },
+    {
+      "files": ["packages/**/*.tsx"],
+      "options": {
+        "parser": "alloy-ts"
+      }
+    },
+    {
+      "files": ["packages/**/*.js"],
+      "options": {
+        "parser": "alloy-js"
+      }
+    }
+  ]
+}

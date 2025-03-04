@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@alloy-js/prettier-plugin-alloy": "^0.1.0",
+    "@typespec/prettier-plugin-typespec": "^0.65.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "vitest": "catalog:"
   },
   "pnpm": {
