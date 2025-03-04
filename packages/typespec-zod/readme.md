@@ -19,7 +19,7 @@ pnpm install
 Build the project along with all its dependencies using:
 
 ```bash
-pnpm --filter efv2-zod-sketch... build
+pnpm --filter typespec-zod... build
 ```
 
 ### Step 3: Change Directory to the Package
@@ -27,7 +27,7 @@ pnpm --filter efv2-zod-sketch... build
 Navigate to the `efv2-zod-sketch` package directory:
 
 ```bash
-cd packages/efv2-zod-sketch
+cd packages/demo
 ```
 
 ### Step 4: Emit the Sample Spec

@@ -11,8 +11,10 @@
     "sourceMap": true,
     "declarationMap": true,
     "jsx": "preserve",
-
     "emitDeclarationOnly": true,
+    "paths": {
+      "@modelcontextprotocol/sdk": ["./node_modules/@modelcontextprotocol/sdk"]
+    },
     "outDir": "dist"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "test/**/*.tsx"],

@@ -22,8 +22,10 @@
   "dependencies": {
     "@alloy-js/core": "catalog:",
     "@alloy-js/typescript": "catalog:",
+    "@modelcontextprotocol/sdk": "^1.6.1",
     "@typespec/compiler": "catalog:",
     "@typespec/emitter-framework": "catalog:",
+    "@typespec/rest": "^0.66.0",
     "typespec-zod": "workspace:~"
   },
   "devDependencies": {

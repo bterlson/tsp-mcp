@@ -4,11 +4,14 @@ import { EmitContext, Model, navigateProgram } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { writeOutput } from "@typespec/emitter-framework";
 import { zod, ZodModel } from "typespec-zod";
+import { generateMcpServerProject, McpServerOptions } from "./components/McpServer.js";
 
 export async function $onEmit(context: EmitContext) {
   const models = getAllModels(context);
   const modelDecls = mapJoin(models, (model) => <ZodModel model={model} />);
 
+  // There are two things to emit:
+  // 1. The Zod models.  This is already done here by emitting modelDecls.
   writeOutput(
     <Output externals={[zod]}>
       <SourceFile path="types.ts">
@@ -17,6 +20,64 @@ export async function $onEmit(context: EmitContext) {
     </Output>,
     context.emitterOutputDir,
   );
+
+  // 2. The McpServer code, project files like package.json, etc.
+  // Extract operations from the program
+  const operations = extractOperations(context);
+
+  // Generate MCP server files - these will now be formatted using Alloy
+  const serverFiles = generateMcpServerProject({
+    operations,
+    program: context.program
+  });
+
+  // Create a nested directory "server" for the MCP server files
+  const serverDir = "server";
+  
+  // Emit each server file using writeOutput
+  for (const file of serverFiles) {
+    // Prepend the server directory path
+    const fullPath = `${serverDir}/${file.path}`;
+    
+    // Emit the JSX Element directly
+    writeOutput(
+      <Output>
+        <SourceFile path={fullPath}>
+          {file.content}
+        </SourceFile>
+      </Output>,
+      context.emitterOutputDir,
+    );
+  }
+
+  // Also copy the types.ts to the server/src directory
+  writeOutput(
+    <Output externals={[zod]}>
+      <SourceFile path={`${serverDir}/src/types.ts`}>
+        {modelDecls}
+      </SourceFile>
+    </Output>,
+    context.emitterOutputDir,
+  );
+}
+
+// Helper function to extract operations from the TypeSpec program
+function extractOperations(context: EmitContext): McpServerOptions['operations'] {
+  // Simplified stub implementation - will be enhanced later
+  return [
+    {
+      operationId: "exampleGet",
+      path: "/api/example",
+      method: "get",
+      description: "Example GET operation"
+    },
+    {
+      operationId: "examplePost",
+      path: "/api/example",
+      method: "post",
+      description: "Example POST operation"
+    }
+  ];
 }
 
 function getAllModels(context: EmitContext) {
