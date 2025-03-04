@@ -1,0 +1,17 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@typespec/compiler": "catalog:",
+    "typespec-zod": "workspace:~"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsp compile main.tsp --emit typespec-zod"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

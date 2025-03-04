@@ -1,0 +1,21 @@
+{
+  "name": "tsp-mcp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitest": "catalog:"
+  },
+  "pnpm": {
+    "overrides": {
+      "@typespec/compiler": "0.66.0-dev.29",
+      "@typespec/emitter-framework": "0.2.0-dev.2"
+    }
+  }
+}
