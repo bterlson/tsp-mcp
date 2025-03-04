@@ -40,6 +40,43 @@ importers:
         specifier: workspace:~
         version: link:../typespec-zod
 
+  packages/typespec-mcp:
+    dependencies:
+      '@alloy-js/core':
+        specifier: 'catalog:'
+        version: 0.5.0
+      '@alloy-js/typescript':
+        specifier: 'catalog:'
+        version: 0.5.0
+      '@typespec/compiler':
+        specifier: 0.66.0-dev.29
+        version: 0.66.0-dev.29(@types/node@22.13.9)
+      '@typespec/emitter-framework':
+        specifier: 0.2.0-dev.2
+        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
+      typespec-zod:
+        specifier: workspace:~
+        version: link:../typespec-zod
+    devDependencies:
+      '@babel/cli':
+        specifier: ^7.24.8
+        version: 7.26.4(@babel/core@7.26.9)
+      '@babel/core':
+        specifier: ^7.24.9
+        version: 7.26.9
+      '@rollup/plugin-babel':
+        specifier: ^6.0.4
+        version: 6.0.4(@babel/core@7.26.9)(rollup@4.34.9)
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
+      typescript:
+        specifier: 'catalog:'
+        version: 5.8.2
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.13.9)
+
   packages/typespec-zod:
     dependencies:
       '@alloy-js/core':
