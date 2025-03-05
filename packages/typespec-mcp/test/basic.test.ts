@@ -34,14 +34,14 @@ describe("typespec-mcp: basic", () => {
     const normalizeSpacing = (str: string) => str.replace(/[ \t]+/g, ' ');
     
     // Convert to plain strings for comparison to avoid deep equal issues
-    const normalized1 = normalizeSpacing(file!).trimRight();
+    const normalized1 = normalizeSpacing(file!).trimEnd();
     const normalized2 = normalizeSpacing(`import { z } from "zod";
 
 export const Person = z.object({
   id: z.string(),
   name: z.string(),
   age: z.number().min(-2147483648).max(2147483647).optional()
-});`).trimRight();
+});`).trimEnd();
 
     // Log for debugging
     console.log("Normalized file:", JSON.stringify(normalized1));
