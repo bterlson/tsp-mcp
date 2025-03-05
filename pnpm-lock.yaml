@@ -74,10 +74,13 @@ importers:
         version: 0.66.0-dev.29(@types/node@22.13.9)
       '@typespec/emitter-framework':
         specifier: 0.2.0-dev.2
-        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
+        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
+      '@typespec/http':
+        specifier: 0.66.0
+        version: 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))
       '@typespec/rest':
         specifier: ^0.66.0
-        version: 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))
+        version: 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))
       typespec-zod:
         specifier: workspace:~
         version: link:../typespec-zod
@@ -120,7 +123,7 @@ importers:
         version: 0.66.0-dev.29(@types/node@22.13.9)
       '@typespec/emitter-framework':
         specifier: 0.2.0-dev.2
-        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
+        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
       hono:
         specifier: ^4.7.2
         version: 4.7.2
@@ -169,7 +172,7 @@ importers:
         version: 0.66.0-dev.29(@types/node@22.13.9)
       '@typespec/emitter-framework':
         specifier: 0.2.0-dev.2
-        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
+        version: 0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))
     devDependencies:
       '@babel/cli':
         specifier: ^7.24.8
@@ -915,12 +918,12 @@ packages:
       '@typespec/http': ~0.65.0 || >=0.66.0-dev <0.66.0
       '@typespec/rest': ~0.65.0 || >=0.66.0-dev <0.66.0
 
-  '@typespec/http@0.65.0':
-    resolution: {integrity: sha512-mSJUVmlBq4VO2Pv+mXNXccsuq+8AySWUwbJbbyNQTtpb2M9MIKh2+fbnyb8EMjskxpBWNP2DqABhfEMVesVUkg==}
+  '@typespec/http@0.66.0':
+    resolution: {integrity: sha512-IKD5FMvnjbZ5cdQ3wTXXAnnQgDcqFuPtVphpTdnYER87gGEa8YNLocgK44CLFB+GvVkTecDltG0CNKPSPQ0RMw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@typespec/compiler': 0.66.0-dev.29
-      '@typespec/streams': ~0.65.0
+      '@typespec/streams': ~0.66.0
     peerDependenciesMeta:
       '@typespec/streams':
         optional: true
@@ -3179,17 +3182,17 @@ snapshots:
       - '@types/node'
       - supports-color
 
-  '@typespec/emitter-framework@0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))':
+  '@typespec/emitter-framework@0.2.0-dev.2(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))))':
     dependencies:
       '@alloy-js/core': 0.5.0
       '@alloy-js/typescript': 0.5.0
       '@typespec/compiler': 0.66.0-dev.29(@types/node@22.13.9)
-      '@typespec/http': 0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))
-      '@typespec/rest': 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))
+      '@typespec/http': 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))
+      '@typespec/rest': 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))
     transitivePeerDependencies:
       - supports-color
 
-  '@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))':
+  '@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))':
     dependencies:
       '@typespec/compiler': 0.66.0-dev.29(@types/node@22.13.9)
 
@@ -3197,10 +3200,10 @@ snapshots:
     dependencies:
       prettier: 3.4.2
 
-  '@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))':
+  '@typespec/rest@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)))':
     dependencies:
       '@typespec/compiler': 0.66.0-dev.29(@types/node@22.13.9)
-      '@typespec/http': 0.65.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))
+      '@typespec/http': 0.66.0(@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9))
 
   '@vitest/expect@2.1.9':
     dependencies:

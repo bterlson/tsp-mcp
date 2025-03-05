@@ -6,12 +6,12 @@ describe("typespec-mcp: server generation", () => {
   let runner: TestRunnerWithHost;
     
   beforeEach(async () => {
-    runner = await createTestRunner(undefined, false);
+    runner = await createTestRunner(undefined, true);
   });
 
   it("generates server project files", async () => {
     await runner.compile(`
-      @service({
+      @service(#{
         title: "Test API"
       })
       namespace TestAPI;

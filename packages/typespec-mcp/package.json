@@ -26,6 +26,7 @@
     "@typespec/compiler": "catalog:",
     "@typespec/emitter-framework": "catalog:",
     "@typespec/rest": "^0.66.0",
+    "@typespec/http": "0.66.0",
     "typespec-zod": "workspace:~"
   },
   "devDependencies": {

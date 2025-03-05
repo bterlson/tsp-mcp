@@ -8,7 +8,7 @@ import { generateMcpServerProject, McpServerOptions } from "./components/McpServ
 
 export async function $onEmit(context: EmitContext) {
   const models = getAllModels(context);
-  const modelDecls = mapJoin(models, (type) => <ZodTypeDeclaration type={type} />);  // Updated component and prop
+  const modelDecls = mapJoin(models, (type) => <ZodTypeDeclaration type={type} export={true}/>);  // Updated component and prop
 
   // There are two things to emit:
   // 1. The Zod models.  This is already done here by emitting modelDecls.
