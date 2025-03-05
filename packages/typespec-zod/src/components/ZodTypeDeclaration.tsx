@@ -26,7 +26,8 @@ export function ZodTypeDeclaration(props: ZodTypeDeclarationProps) {
   let typeDeclaration;
   switch (props.type.kind) {
     case "Model":
-      typeDeclaration = <ZodObject type={props.type} />;
+      typeDeclaration = <ZodObject type={props.type}/>;
+      props.export = true;
       break;
     case "Enum":
       typeDeclaration = <ZodEnum type={props.type} />;

@@ -6,7 +6,7 @@ describe("typespec-mcp: operation extraction", () => {
   let runner: TestRunnerWithHost;
 
   beforeEach(async () => {
-    runner = await createTestRunner();
+    runner = await createTestRunner(undefined, false);
   });
 
   it("correctly extracts operations with different HTTP methods", async () => {

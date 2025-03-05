@@ -17,9 +17,23 @@ export async function createTestHost() {
   });
 }
 
-export async function createTestRunner(emitterOptions?: {}): Promise<TestRunnerWithHost> {
+export async function createTestRunner(
+  emitterOptions?: {}, 
+  includeHttp = true
+): Promise<TestRunnerWithHost> {
   const host = await createTestHost();
-  const importAndUsings = `using TypeSpec.Http;`; // Add Http namespace for @route, @get, etc.
+  
+  // Only add HTTP if requested
+  if (includeHttp) {
+    // Add HTTP library explicitly
+    host.addJsFile("node_modules/@typespec/http/dist/index.js", {
+      $lib: "@typespec/http"
+    });
+  }
+  
+  // Only include using statement if HTTP is requested
+  const importAndUsings = includeHttp ? `using TypeSpec.Http;` : ``;
+  
   return createTestWrapper(host, {
     wrapper: (code) => `${importAndUsings} ${code}`,
     compilerOptions: {
@@ -27,6 +41,8 @@ export async function createTestRunner(emitterOptions?: {}): Promise<TestRunnerW
       options: {
         "typespec-mcp": { ...emitterOptions },
       },
+      // Add this to ignore deprecation warnings
+      warningAsError: false,
     },
-  }) as TestRunnerWithHost; // Cast to our new type
+  }) as TestRunnerWithHost;
 }

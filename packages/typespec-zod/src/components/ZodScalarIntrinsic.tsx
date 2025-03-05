@@ -47,93 +47,73 @@ export function ZodScalarIntrinsic(props: ZodTypeProps): string {
     // numbers.
     if ($.scalar.extendsFloat(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
     if ($.scalar.extendsFloat32(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
     if ($.scalar.extendsFloat64(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
 
     // With integers, though, we completely understand the range and can parse to it.
     if ($.scalar.extendsInt8(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, -128, 127)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, -128, 127)}{optString}
         </>;
     }
     if ($.scalar.extendsInt16(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, -32768, 32767)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, -32768, 32767)}{optString}
         </>;
     }
     if ($.scalar.extendsInt32(props.type)) {
       return <>
-          {zod.z}.number()
-          {ZodNumericConstraints(props, -2147483648, 2147483647)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, -2147483648, 2147483647)}{optString}
         </>;
     }
     if ($.scalar.extendsSafeint(props.type)) {
       return <>
-          {zod.z}.number().safe()
-          {ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number().safe(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
     if ($.scalar.extendsInt64(props.type)) {
       return <>
-          {zod.z}.bigint()
-          {ZodBigIntConstraints(
+          {zod.z}.bigint(){ZodBigIntConstraints(
             props,
             -9223372036854775808n,
             9223372036854775807n
-          )}
-          {optString}
+          )}{optString}
         </>;
     }
     if ($.scalar.extendsUint8(props.type)) {
       return <>
-          {zod.z}.number().nonnegative()
-          {ZodNumericConstraints(props, undefined, 255)}
-          {optString}
+          {zod.z}.number().nonnegative(){ZodNumericConstraints(props, undefined, 255)}{optString}
         </>;
     }
     if ($.scalar.extendsUint16(props.type)) {
       return <>
-          {zod.z}.number().nonnegative()
-          {ZodNumericConstraints(props, undefined, 65535)}
-          {optString}
+          {zod.z}.number().nonnegative(){ZodNumericConstraints(props, undefined, 65535)}{optString}
         </>;
     }
     if ($.scalar.extendsUint32(props.type)) {
       return <>
-          {zod.z}.number().nonnegative()
-          {ZodNumericConstraints(props, undefined, 4294967295)}
-          {optString}
+          {zod.z}.number().nonnegative(){ZodNumericConstraints(props, undefined, 4294967295)}{optString}
         </>;
     }
     if ($.scalar.extendsUint64(props.type)) {
       return <>
-          {zod.z}.bigint().nonnegative()
-          {ZodBigIntConstraints(props, undefined, 18446744073709551615n)}
-          {optString}
+          {zod.z}.bigint().nonnegative(){ZodBigIntConstraints(props, undefined, 18446744073709551615n)}{optString}
         </>;
     }
     if ($.scalar.extendsInteger(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
 
@@ -145,15 +125,13 @@ export function ZodScalarIntrinsic(props: ZodTypeProps): string {
 
     if ($.scalar.extendsString(props.type)) {
       return <>
-          {zod.z}.string(){ZodStringConstraints(props)}
-          {optString}
+          {zod.z}.string(){ZodStringConstraints(props)}{optString}
         </>;
     }
 
     if ($.scalar.extendsDecimal(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
 
@@ -164,15 +142,13 @@ export function ZodScalarIntrinsic(props: ZodTypeProps): string {
     // precision if an integer.
     if ($.scalar.extendsDecimal128(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
 
     if ($.scalar.extendsNumeric(props.type)) {
       return <>
-          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}
-          {optString}
+          {zod.z}.number(){ZodNumericConstraints(props, undefined, undefined)}{optString}
         </>;
     }
 

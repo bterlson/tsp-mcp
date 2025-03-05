@@ -6,7 +6,7 @@ describe("typespec-mcp: configuration files", () => {
   let runner: TestRunnerWithHost;
 
   beforeEach(async () => {
-    runner = await createTestRunner();
+    runner = await createTestRunner(undefined, false);
   });
 
   it("generates correct package.json with CLI configuration", async () => {

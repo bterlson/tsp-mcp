@@ -6,7 +6,7 @@ describe("typespec-mcp: server generation", () => {
   let runner: TestRunnerWithHost;
     
   beforeEach(async () => {
-    runner = await createTestRunner();
+    runner = await createTestRunner(undefined, false);
   });
 
   it("generates server project files", async () => {
