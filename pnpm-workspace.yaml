@@ -8,3 +8,4 @@ catalog:
   "@typespec/compiler": "^0.65.3"
   "@typespec/emitter-framework": "^0.1.0"
   "vitest": "^2.0.3"
+  "zod": "^3.24.2"

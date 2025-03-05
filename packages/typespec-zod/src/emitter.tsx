@@ -40,21 +40,12 @@ Build, babel, and debug from packages\efv2-zod-sketch:
 
 import * as ay from "@alloy-js/core";
 import * as ts from "@alloy-js/typescript";
-import {
-  EmitContext,
-  Enum,
-  EnumMember,
-  Model,
-  navigateType,
-  Type,
-} from "@typespec/compiler";
+import { EmitContext, Enum, Model, navigateType } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
-import { zod } from "./external-packages/zod.js";
 import { writeOutput } from "@typespec/emitter-framework";
-import { ZodTypeProps } from "./components/ZodType.jsx";
-import { ModelProps } from "./components/ZodNestedModel.jsx";
 import { ZodEnum } from "./components/ZodEnum.jsx";
-import { ZodModel } from "./components/ZodModel.jsx";
+import { ZodTypeDeclaration } from "./components/ZodTypeDeclaration.jsx";
+import { zod } from "./external-packages/zod.js";
 export async function $onEmit(context: EmitContext) {
   // Get all models
   const models = getModels();
@@ -70,7 +61,7 @@ export async function $onEmit(context: EmitContext) {
             {ay.mapJoin(
               enums,
               (enumInstance) => {
-                return <ZodEnum enum={enumInstance} />;
+                return <ZodEnum type={enumInstance} />;
               },
               { joiner: "\n\n" }
             )}
@@ -78,7 +69,7 @@ export async function $onEmit(context: EmitContext) {
             {ay.mapJoin(
               models,
               (model) => {
-                return <ZodModel model={model} />;
+                return <ZodTypeDeclaration type={model} />;
               },
               { joiner: "\n\n" }
             )}
@@ -86,7 +77,7 @@ export async function $onEmit(context: EmitContext) {
         </ay.SourceDirectory>
       </ts.PackageDirectory>
     </ay.Output>,
-    context.emitterOutputDir
+    context.emitterOutputDir,
   );
 }
 
@@ -109,7 +100,7 @@ function getModels() {
 
   // Get all namespaces defined in the spec, excluding TypeSpec namespace.
   const specNamespaces = Array.from(globalNs.namespaces.values()).filter(
-    (ns) => !ns.name.startsWith("TypeSpec")
+    (ns) => !ns.name.startsWith("TypeSpec"),
   );
 
   for (const ns of specNamespaces) {
@@ -125,7 +116,7 @@ function getModels() {
           models.add(model);
         },
       },
-      { includeTemplateDeclaration: false }
+      { includeTemplateDeclaration: false },
     );
   }
 
@@ -141,7 +132,7 @@ function getEnums() {
   const globalNs = $.program.getGlobalNamespaceType();
   const globalEnums = Array.from(globalNs.enums.values());
   const specNamespaces = Array.from(globalNs.namespaces.values()).filter(
-    (ns) => !ns.name.startsWith("TypeSpec")
+    (ns) => !ns.name.startsWith("TypeSpec"),
   );
 
   for (const ns of specNamespaces) {
@@ -152,7 +143,7 @@ function getEnums() {
           enums.add(enumType);
         },
       },
-      { includeTemplateDeclaration: false }
+      { includeTemplateDeclaration: false },
     );
   }
 

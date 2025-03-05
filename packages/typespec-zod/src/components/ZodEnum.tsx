@@ -24,11 +24,11 @@ import { Enum, EnumMember } from "@typespec/compiler";
     TodoStatusEnum.parse("chipmunks"); // Fails
     */
 export interface EnumProps {
-  enum: Enum;
+  type: Enum;
 }
 export function ZodEnum(props: EnumProps) {
   const namePolicy = ts.useTSNamePolicy();
-  const enumName = namePolicy.getName(props.enum.name, "variable");
+  const enumName = namePolicy.getName(props.type.name, "variable");
   const enumCall = "export const enum " + enumName + "\n";
   const enumMembers = ZodEnumMembers(props);
   const enumBody = enumCall + "{\n" + enumMembers + "\n};\n";
@@ -36,13 +36,13 @@ export function ZodEnum(props: EnumProps) {
 }
 
 export interface ZodEnumMembersProps {
-  enum: Enum;
+  type: Enum;
 }
 
 export function ZodEnumMembers(props: ZodEnumMembersProps) {
   const namePolicy = ts.useTSNamePolicy();
   const array: string[] = [];
-  props.enum.members.forEach((value: EnumMember) => {
+  props.type.members.forEach((value: EnumMember) => {
     const memberName = namePolicy.getName(value.name, "variable");
     if (value.value !== undefined) {
       if (typeof value.value === "string") {

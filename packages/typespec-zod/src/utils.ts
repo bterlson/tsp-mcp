@@ -25,10 +25,7 @@ export function getAllPropertyConstraints(type: Type): Constraints {
 }
 
 export type ConstraintKey = keyof NumericConstraints;
-export function getLocalPropertyConstraints(
-  type: Type,
-  constraints: Constraints
-) {
+export function getLocalPropertyConstraints(type: Type, constraints: Constraints) {
   const constraintTypes: {
     key: ConstraintKey;
     value: number | undefined;
@@ -87,12 +84,9 @@ export type Constraints = NumericConstraints & {
 function updateConstraint<T>(
   constraint: T | undefined,
   newValue: T | undefined,
-  comparator: (a: T, b: T) => boolean
+  comparator: (a: T, b: T) => boolean,
 ): T | undefined {
-  if (
-    newValue !== undefined &&
-    (constraint === undefined || comparator(newValue, constraint))
-  ) {
+  if (newValue !== undefined && (constraint === undefined || comparator(newValue, constraint))) {
     return newValue;
   }
   return constraint;
@@ -101,10 +95,10 @@ function updateConstraint<T>(
 export function ZodNumericConstraints(
   props: ZodTypeProps,
   minBasic: number | undefined,
-  maxBasic: number | undefined
+  maxBasic: number | undefined,
 ): string {
-  const minValue = props.constraints.minValue;
-  const maxValue = props.constraints.maxValue;
+  const minValue = props.constraints?.minValue;
+  const maxValue = props.constraints?.maxValue;
   const min: string =
     minValue !== undefined
       ? `.min(${minValue})`
@@ -124,10 +118,10 @@ export function ZodNumericConstraints(
 export function ZodBigIntConstraints(
   props: ZodTypeProps,
   minBasic: bigint | undefined,
-  maxBasic: bigint | undefined
+  maxBasic: bigint | undefined,
 ): string {
-  const minValue = props.constraints.minValue;
-  const maxValue = props.constraints.maxValue;
+  const minValue = props.constraints?.minValue;
+  const maxValue = props.constraints?.maxValue;
   const min: string =
     minValue !== undefined
       ? `.gte(${minValue}n)`
@@ -145,8 +139,8 @@ export function ZodBigIntConstraints(
 }
 
 export function ZodStringConstraints(props: ZodTypeProps): string {
-  const minLength = props.constraints.minLength;
-  const maxLength = props.constraints.maxLength;
+  const minLength = props.constraints?.minLength;
+  const maxLength = props.constraints?.maxLength;
   const min: string = minLength !== undefined ? `.min(${minLength})` : "";
   const max: string = maxLength !== undefined ? `.max(${maxLength})` : "";
   const minmax = min + max;
@@ -154,8 +148,8 @@ export function ZodStringConstraints(props: ZodTypeProps): string {
 }
 
 export function ZodArrayConstraints(props: ZodTypeProps): string {
-  const minItems = props.constraints.minItems;
-  const maxItems = props.constraints.maxItems;
+  const minItems = props.constraints?.minItems;
+  const maxItems = props.constraints?.maxItems;
   const min: string = minItems !== undefined ? `.min(${minItems})` : "";
   const max: string = maxItems !== undefined ? `.max(${maxItems})` : "";
   const minmax = min + max;
