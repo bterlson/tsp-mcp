@@ -3,12 +3,12 @@ import { SourceFile } from "@alloy-js/typescript";
 import { EmitContext, Model, navigateProgram } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { writeOutput } from "@typespec/emitter-framework";
-import { zod, ZodModel } from "typespec-zod";
+import { zod, ZodTypeDeclaration } from "typespec-zod";  // Updated import
 import { generateMcpServerProject, McpServerOptions } from "./components/McpServer.js";
 
 export async function $onEmit(context: EmitContext) {
   const models = getAllModels(context);
-  const modelDecls = mapJoin(models, (model) => <ZodModel model={model} />);
+  const modelDecls = mapJoin(models, (type) => <ZodTypeDeclaration type={type} />);  // Updated component and prop
 
   // There are two things to emit:
   // 1. The Zod models.  This is already done here by emitting modelDecls.
