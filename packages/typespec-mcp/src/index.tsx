@@ -64,7 +64,7 @@ export async function $onEmit(context: EmitContext) {
   writeOutput(
     <Output>
       <SourceFile path="../../src/mcp-server/index.ts">
-        {`import { startMcpServer } from "../../../tsp-output/typespec-mcp/server/src/index.js";
+        {`import { startMcpServer } from "../../tsp-output/typespec-mcp/server/src/index.js";
 
 // Start the MCP server
 startMcpServer();`}
