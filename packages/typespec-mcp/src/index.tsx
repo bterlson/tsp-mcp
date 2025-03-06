@@ -59,6 +59,19 @@ export async function $onEmit(context: EmitContext) {
     </Output>,
     context.emitterOutputDir,
   );
+
+  // Generate demo entry point in demo/src/mcp-server/index.ts
+  writeOutput(
+    <Output>
+      <SourceFile path="../../demo/src/mcp-server/index.ts">
+        {`import { main } from "../../../tsp-output/typespec-mcp/server/src/index.js";
+
+// Start the MCP server
+main();`}
+      </SourceFile>
+    </Output>,
+    context.emitterOutputDir,
+  );
 }
 
 // Helper function to extract operations from the TypeSpec program
