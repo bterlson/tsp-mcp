@@ -28,7 +28,8 @@ export async function $onEmit(context: EmitContext) {
   // Generate MCP server files - these will now be formatted using Alloy
   const serverFiles = generateMcpServerProject({
     operations,
-    program: context.program
+    program: context.program,
+    models: models // Pass the models to the server generator
   });
 
   // Create a nested directory "server" for the MCP server files
