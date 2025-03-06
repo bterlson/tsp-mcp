@@ -63,11 +63,11 @@ export async function $onEmit(context: EmitContext) {
   // Generate demo entry point in demo/src/mcp-server/index.ts
   writeOutput(
     <Output>
-      <SourceFile path="../../demo/src/mcp-server/index.ts">
-        {`import { main } from "../../../tsp-output/typespec-mcp/server/src/index.js";
+      <SourceFile path="../../src/mcp-server/index.ts">
+        {`import { startMcpServer } from "../../../tsp-output/typespec-mcp/server/src/index.js";
 
 // Start the MCP server
-main();`}
+startMcpServer();`}
       </SourceFile>
     </Output>,
     context.emitterOutputDir,
