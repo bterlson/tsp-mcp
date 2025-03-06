@@ -59,40 +59,30 @@ export function generateMcpServerProject(options: McpServerOptions): McpServerOu
   ];
 }
 
+// In PackageJson component of McpServer.tsx
 function PackageJson() {
   return code`
     {
       "name": "mcp-server",
       "version": "1.0.0",
-      "description": "MCP Server implementation generated from TypeSpec",
       "type": "module",
-      "main": "dist/index.js",
-      "bin": {
-        "mcp-server": "dist/index.js"
-      },
-      "files": [
-        "dist"
-      ],
       "scripts": {
-        "build": "tsc && shx chmod +x dist/index.js",
+        "build": "tsc",
         "start": "node dist/index.js",
-        "dev": "ts-node --esm src/index.ts",
-        "watch": "tsc --watch"
+        "dev": "tsx watch src/index.ts"
       },
       "dependencies": {
+        "@modelcontextprotocol/sdk": "^0.2.0",
         "express": "^4.18.2",
-        "cors": "^2.8.5",
-        "@modelcontextprotocol/sdk": "^1.6.1",
-        "@types/node": "^20.10.0",
+        "crypto": "^1.0.1",
         "zod": "^3.22.4",
         "zod-to-json-schema": "^3.22.3"
       },
       "devDependencies": {
-        "typescript": "^5.3.3",
-        "ts-node": "^10.9.1",
-        "@types/express": "^4.17.17",
-        "@types/cors": "^2.8.13",
-        "shx": "^0.3.4"
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.10.5",
+        "tsx": "^4.6.2",
+        "typescript": "^5.3.3"
       }
     }
   `;
@@ -227,6 +217,12 @@ function IndexTs({ operations, program, models }: IndexTsProps) {
     // Constants
     const VERSION = "1.0.0";
     const SERVER_NAME = "model-context-protocol-server";
+
+    // In-memory stores for all models
+    ${mapJoin(models, (model) => {
+      const modelName = model.name;
+      return code`const ${modelName.toLowerCase()}Store = new Map();`;
+    }, { joiner: '\n' })}
 
     /**
      * Creates and configures the MCP server
@@ -636,10 +632,6 @@ function ModelEndpoints({ models }: ModelEndpointsProps) {
       
       return code`
         // ${modelName} endpoints
-        
-        // In-memory storage for ${modelName}
-        // In a real implementation, this would use a database
-        const ${modelName.toLowerCase()}Store = new Map();
         
         // GET all ${modelName}s
         app.get('${resourcePath}', (req, res) => {
