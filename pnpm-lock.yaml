@@ -127,6 +127,9 @@ importers:
       hono:
         specifier: ^4.7.2
         version: 4.7.2
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       typespec-zod:
         specifier: 'workspace:'
         version: link:../typespec-zod
@@ -149,6 +152,9 @@ importers:
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.9)(rollup@4.34.9)
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
@@ -905,6 +911,9 @@ packages:
 
   '@types/node@22.13.9':
     resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
+
+  '@types/pluralize@0.0.33':
+    resolution: {integrity: sha512-JOqsl+ZoCpP4e8TDke9W79FDcSgPAR0l6pixx2JHkhnRjvShyYiAYw2LVsnA7K08Y6DeOnaU6ujmENO4os/cYg==}
 
   '@typespec/compiler@0.66.0-dev.29':
     resolution: {integrity: sha512-MR/qhxOuChJMXe1Nk+OpOHsuAq2kGOiL/F3XEtreKbD4z283CCW4QuyknyezyeItYYChRr04VJkAe/aPTNg3Ww==}
@@ -1854,6 +1863,10 @@ packages:
   pkce-challenge@4.1.0:
     resolution: {integrity: sha512-ZBmhE1C9LcPoH9XZSdwiPtbPHZROwAnMy+kIFQVrnMCxY4Cudlz3gBOpzilgc0jOgRaiT3sIWfpMomW2ar2orQ==}
     engines: {node: '>=16.20.0'}
+
+  pluralize@8.0.0:
+    resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
+    engines: {node: '>=4'}
 
   postcss-selector-parser@6.1.2:
     resolution: {integrity: sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==}
@@ -3160,6 +3173,8 @@ snapshots:
       undici-types: 6.20.0
     optional: true
 
+  '@types/pluralize@0.0.33': {}
+
   '@typespec/compiler@0.66.0-dev.29(@types/node@22.13.9)':
     dependencies:
       '@babel/code-frame': 7.26.2
@@ -4161,6 +4176,8 @@ snapshots:
   pify@4.0.1: {}
 
   pkce-challenge@4.1.0: {}
+
+  pluralize@8.0.0: {}
 
   postcss-selector-parser@6.1.2:
     dependencies:

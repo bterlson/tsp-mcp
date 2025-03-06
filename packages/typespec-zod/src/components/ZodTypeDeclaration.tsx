@@ -16,10 +16,10 @@ interface ZodTypeDeclarationProps
 export function ZodTypeDeclaration(props: ZodTypeDeclarationProps) {
   // TypeKit - isDeclaration, isExpression
   if (
-    props.name ||
-    !("name" in props.type) ||
-    props.type.name === undefined ||
-    typeof props.type.name === "symbol"
+    !props.name &&
+    (!("name" in props.type) ||
+      props.type.name === undefined ||
+      typeof props.type.name === "symbol")
   ) {
     return "";
   }
@@ -36,7 +36,7 @@ export function ZodTypeDeclaration(props: ZodTypeDeclarationProps) {
       break;
   }
   // todo: use split props
-  return <ts.VarDeclaration export={props.export} refkey={props.refkey} name={props.name ?? props.type.name}>
+  return <ts.VarDeclaration export={props.export} refkey={props.refkey} name={props.name ?? (props.type as any).name}>
     {typeDeclaration}
   </ts.VarDeclaration>;
 }
