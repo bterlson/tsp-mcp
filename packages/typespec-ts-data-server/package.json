@@ -27,6 +27,7 @@
     "@typespec/compiler": "catalog:",
     "@typespec/emitter-framework": "catalog:",
     "hono": "^4.7.2",
+    "pluralize": "^8.0.0",
     "typespec-zod": "workspace:",
     "zod": "catalog:"
   },
@@ -36,6 +37,7 @@
     "@babel/core": "^7.24.9",
     "@babel/preset-typescript": "^7.26.0",
     "@rollup/plugin-babel": "^6.0.4",
+    "@types/pluralize": "^0.0.33",
     "concurrently": "^8.2.2",
     "typescript": "catalog:",
     "vitest": "catalog:"
