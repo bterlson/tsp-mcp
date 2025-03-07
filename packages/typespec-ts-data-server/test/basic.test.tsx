@@ -30,6 +30,6 @@ it("works", async () => {
     }
   `);
 
-  //assertFileContents(runner, "types.ts", "");
+  //assertFileContents(runner, "ts-types.ts", "");
   assertFileContents(runner, "app.ts", "");
 });

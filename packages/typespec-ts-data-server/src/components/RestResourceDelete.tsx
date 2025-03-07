@@ -6,15 +6,15 @@ import { HonoApp } from "../well-known-symbols.js";
 import { Coerce } from "./Coerse.jsx";
 import { RestResourceCheckHandler } from "./RestResourceCheckHandler.jsx";
 
-export interface RestResourceGetProps {
+export interface RestResourceDeleteProps {
   type: Model;
 }
 
-export function RestResourceGet(props: RestResourceGetProps) {
+export function RestResourceDelete(props: RestResourceDeleteProps) {
   const path = "/" + resourceName(props.type) + "/:id";
   const keyProp = getKeyProp(props.type)?.type ?? $.builtin.string;
   return <>
-    {HonoApp}.get("{path}", async (c) ={">"} {"{"}
+    {HonoApp}.delete("{path}", async (c) ={">"} {"{"}
       <RestResourceCheckHandler type={props.type} />
 
       return c.json(await {refkey(props.type, "handler-value")}.read(<Coerce from={$.builtin.string} to={keyProp as Scalar}>

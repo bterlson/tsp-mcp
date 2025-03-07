@@ -18,8 +18,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@typespec/compiler": "0.66.0-dev.29",
-      "@typespec/emitter-framework": "0.2.0-dev.2"
+      "@typespec/compiler": "0.67.0-dev.10",
+      "@typespec/emitter-framework": "0.3.0-dev.3"
     }
   }
 }

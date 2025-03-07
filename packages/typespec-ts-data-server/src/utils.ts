@@ -1,4 +1,10 @@
-import { $withVisibilityFilter, getLifecycleVisibilityEnum, Model } from "@typespec/compiler";
+import {
+  $withOptionalProperties,
+  $withVisibilityFilter,
+  getLifecycleVisibilityEnum,
+  isKey,
+  Model,
+} from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import pluralize from "pluralize";
 
@@ -32,5 +38,27 @@ export function modelWithVisibility(
     },
   );
 
+  if (visibility === "Update") {
+    $withOptionalProperties(
+      {
+        program: $.program,
+        getArgumentTarget() {
+          return undefined;
+        },
+      } as any,
+      clone,
+    );
+  }
+
   return clone;
+}
+
+export function getKeyProp(type: Model) {
+  for (const prop of type.properties.values()) {
+    if (isKey($.program, prop)) {
+      return prop;
+    }
+  }
+
+  return null;
 }

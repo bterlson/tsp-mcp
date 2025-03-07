@@ -27,15 +27,15 @@ export function ZodType(props: ZodTypeProps) {
       return <ZodScalarIntrinsic {...props} />;
     case "Boolean":
       return <>
-          {zod.z}.boolean(){optString}
+          {zod.z}.literal({String(props.type.value)}){optString}
         </>;
     case "String":
       return <>
-          {zod.z}.string(){optString}
+          {zod.z}.literal("{props.type.value}"){optString}
         </>;
     case "Number":
       return <>
-          {zod.z}.number(){optString}
+          {zod.z}.literal({props.type.value}){optString}
         </>;
   }
 
