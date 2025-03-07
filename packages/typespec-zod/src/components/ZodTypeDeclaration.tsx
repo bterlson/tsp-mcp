@@ -26,7 +26,7 @@ export function ZodTypeDeclaration(props: ZodTypeDeclarationProps) {
   let typeDeclaration;
   switch (props.type.kind) {
     case "Model":
-      typeDeclaration = <ZodObject type={props.type}/>;
+      typeDeclaration = <ZodObject type={props.type} />;
       break;
     case "Enum":
       typeDeclaration = <ZodEnum type={props.type} />;
@@ -36,7 +36,13 @@ export function ZodTypeDeclaration(props: ZodTypeDeclarationProps) {
       break;
   }
   // todo: use split props
-  return <ts.VarDeclaration export={props.export} refkey={props.refkey} name={props.name ?? (props.type as any).name}>
-    {typeDeclaration}
-  </ts.VarDeclaration>;
+  return (
+    <ts.VarDeclaration
+      export={props.export}
+      refkey={props.refkey}
+      name={props.name ?? (props.type as any).name}
+    >
+      {typeDeclaration}
+    </ts.VarDeclaration>
+  );
 }

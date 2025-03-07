@@ -1,4 +1,4 @@
-import { refkey } from "@alloy-js/core";
+import { Block, refkey } from "@alloy-js/core";
 import { Model, Scalar } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { zValidator } from "../externals/hono.js";
@@ -15,13 +15,21 @@ export function RestResourceUpdate(props: RestResourceUpdateProps) {
   const path = "/" + resourceName(props.type) + "/:id";
   const keyProp = getKeyProp(props.type)?.type ?? $.builtin.string;
 
-  return <>
-    {HonoApp}.patch("{path}", {zValidator.zValidator}("json", {refkey(props.type, "zod-schema-update")}), async (c) ={">"} {"{"}
-      <RestResourceCheckHandler type={props.type} />
-
-      return c.json(await {refkey(props.type, "handler-value")}.update(<Coerce from={$.builtin.string} to={keyProp as Scalar}>
+  return (
+    <>
+      {HonoApp}.patch("{path}", {zValidator.zValidator}("json",{" "}
+      {refkey(props.type, "zod-schema-update")}), async (c) ={">"}{" "}
+      <Block>
+        <RestResourceCheckHandler type={props.type} />
+        <hbr />
+        <hbr />
+        return c.json(await {refkey(props.type, "handler-value")}.update(
+        <Coerce from={$.builtin.string} to={keyProp as Scalar}>
           c.req.param("id")
-      </Coerce>, c.req.valid("json")), 200);
-    {"}"})
-  </>;
+        </Coerce>
+        , c.req.valid("json")), 200);
+      </Block>
+      )
+    </>
+  );
 }

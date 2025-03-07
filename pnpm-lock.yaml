@@ -6,12 +6,15 @@ settings:
 
 catalogs:
   default:
+    '@alloy-js/babel-preset':
+      specifier: ^0.2.0
+      version: 0.2.0
     '@alloy-js/core':
-      specifier: ^0.5.0
-      version: 0.5.0
+      specifier: ^0.6.0
+      version: 0.6.0
     '@alloy-js/typescript':
-      specifier: ^0.5.0
-      version: 0.5.0
+      specifier: ^0.6.0
+      version: 0.6.0
     typescript:
       specifier: ^5.8.2
       version: 5.8.2
@@ -24,15 +27,12 @@ catalogs:
 
 overrides:
   '@typespec/compiler': 0.67.0-dev.10
-  '@typespec/emitter-framework': 0.3.0-dev.3
+  '@typespec/emitter-framework': 0.3.0-dev.4
 
 importers:
 
   .:
     devDependencies:
-      '@alloy-js/prettier-plugin-alloy':
-        specifier: ^0.1.0
-        version: 0.1.0
       '@typespec/prettier-plugin-typespec':
         specifier: ^0.65.0
         version: 0.65.0
@@ -81,10 +81,10 @@ importers:
     dependencies:
       '@alloy-js/core':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.6.0
       '@alloy-js/typescript':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.6.0
       '@modelcontextprotocol/sdk':
         specifier: ^1.6.1
         version: 1.6.1
@@ -92,8 +92,8 @@ importers:
         specifier: 0.67.0-dev.10
         version: 0.67.0-dev.10(@types/node@22.13.9)
       '@typespec/emitter-framework':
-        specifier: 0.3.0-dev.3
-        version: 0.3.0-dev.3(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))
+        specifier: 0.3.0-dev.4
+        version: 0.3.0-dev.4(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))
       '@typespec/http':
         specifier: 0.66.0
         version: 0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))
@@ -127,10 +127,10 @@ importers:
     dependencies:
       '@alloy-js/core':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.6.0
       '@alloy-js/typescript':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.6.0
       '@hono/node-server':
         specifier: ^1.13.8
         version: 1.13.8(hono@4.7.2)
@@ -141,8 +141,8 @@ importers:
         specifier: 0.67.0-dev.10
         version: 0.67.0-dev.10(@types/node@22.13.9)
       '@typespec/emitter-framework':
-        specifier: 0.3.0-dev.3
-        version: 0.3.0-dev.3(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))
+        specifier: 0.3.0-dev.4
+        version: 0.3.0-dev.4(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))
       hono:
         specifier: ^4.7.2
         version: 4.7.2
@@ -157,8 +157,8 @@ importers:
         version: 3.24.2
     devDependencies:
       '@alloy-js/babel-preset':
-        specifier: ^0.1.1
-        version: 0.1.1(@babel/core@7.26.9)
+        specifier: 'catalog:'
+        version: 0.2.0(@babel/core@7.26.9)
       '@babel/cli':
         specifier: ^7.24.8
         version: 7.26.4(@babel/core@7.26.9)
@@ -188,16 +188,16 @@ importers:
     dependencies:
       '@alloy-js/core':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.6.0
       '@alloy-js/typescript':
         specifier: 'catalog:'
-        version: 0.5.0
+        version: 0.6.0
       '@typespec/compiler':
         specifier: 0.67.0-dev.10
         version: 0.67.0-dev.10(@types/node@22.13.9)
       '@typespec/emitter-framework':
-        specifier: 0.3.0-dev.3
-        version: 0.3.0-dev.3(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))
+        specifier: 0.3.0-dev.4
+        version: 0.3.0-dev.4(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))
     devDependencies:
       '@babel/cli':
         specifier: ^7.24.8
@@ -220,28 +220,24 @@ importers:
 
 packages:
 
-  '@alloy-js/babel-plugin-jsx-dom-expressions@0.37.21':
-    resolution: {integrity: sha512-1ULoB6jxSgeRBnR9ktOqj6jewUc3zNRzx4sk8shyqwaD9kLKJ03cObmTFn0xDR3Y3JOP3TmhobL4/niycPyWYA==}
+  '@alloy-js/babel-plugin-jsx-dom-expressions@0.38.0':
+    resolution: {integrity: sha512-iq6Pndj40y/ehBuAxxYT7l8HfagXpiKKz2yrZnbog1jJFIY1Fjnvzkl5dLYAQIUk1t28wj4tiLi+D6A/sqwggA==}
     peerDependencies:
       '@babel/core': ^7.24.7
 
-  '@alloy-js/babel-plugin@0.1.0':
-    resolution: {integrity: sha512-G4Is8ZECXVkbbSXvitMqJOfWeWYmd+ZRdnLxk9MGOrw/N2Sh/d8QXx9rI1DNJuMNf3wi3iE60p5srhtUGNLt8g==}
+  '@alloy-js/babel-plugin@0.2.0':
+    resolution: {integrity: sha512-cTcRePmUWU5rQtXp89XQsyggWX72SjfWADoz3meieuvgPE/BOMXC7QU9VHscZCXyRbJKRX/S4fnRiO34fe1N4w==}
     peerDependencies:
       '@babel/core': ^7.24.7
 
-  '@alloy-js/babel-preset@0.1.1':
-    resolution: {integrity: sha512-sX3nb9+qciBXTaafIYYa/aW3FFZPcSIWm7VFwz134nFJu79jMS+JgsBgcL+md6zH4Vf9WPE/8V1E4LX9WdxS1A==}
+  '@alloy-js/babel-preset@0.2.0':
+    resolution: {integrity: sha512-EbIQiXyRa2Osd5iBwFT2C7s8IBKhQlgMaGA9sasFTo31KGYa5Tim51on8tjdlvGUEWUmJz7KlKA/hjWpchTgDQ==}
 
-  '@alloy-js/core@0.5.0':
-    resolution: {integrity: sha512-EGmjQ8f02xeKPchq3fLlRhK5mt1acce9x0eG1MLOGidNY/PNPlwm6McgT4kSlTIvqGB1R8S64MQQIh86fOpDhQ==}
+  '@alloy-js/core@0.6.0':
+    resolution: {integrity: sha512-t11kEP2lyD5eYk17rcgcFerZIHQwRuEJW3vnKxTTXWCZPcknKyV8STDtqx9B1G0rE01E8tz1cYFpCTiWXIv/Kg==}
 
-  '@alloy-js/prettier-plugin-alloy@0.1.0':
-    resolution: {integrity: sha512-mFfag8sQm5gPJMoGvJNc1fx66Z3X3nxCeoiitBeFnd5nkBMsMnvVw6LZSrVyybt2qTzY+G/9Qvz3ULkW7RB15Q==}
-    engines: {node: '>=18.0.0'}
-
-  '@alloy-js/typescript@0.5.0':
-    resolution: {integrity: sha512-asIUIxqCJDBw3HINDdy+mj5vWm3FUCLlXxfSuydyCzmFvVIfMz2TLQGa660CNx98KLsNzCWegmXnsC5QYH3rbg==}
+  '@alloy-js/typescript@0.6.0':
+    resolution: {integrity: sha512-vGhBm9Vr90uwtsGeeA/89EKxBUe/p/+hZ3ozLO6jm72Ph1nJZbd5+spFs9V/CPfDt0KaR6jruwcJaqHO08AEBw==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -939,8 +935,8 @@ packages:
     engines: {node: '>=20.0.0'}
     hasBin: true
 
-  '@typespec/emitter-framework@0.3.0-dev.3':
-    resolution: {integrity: sha512-Ec9uwu4ZZppPNQm5yUIAa74aNXROSQhj2LsPXidwrS9lzDUT3dSC7bxQAYHrM2tnFip5RrDfhzXpH7sLzzeACg==}
+  '@typespec/emitter-framework@0.3.0-dev.4':
+    resolution: {integrity: sha512-qB75ZSFTT2/Pn+9d36hZavcSB/omzgkquANBmYfbs6J1LN0CyUIKVS1VF3ECdp57kqeK7VIOFzNYqMpLRWcTsg==}
     peerDependencies:
       '@typespec/compiler': 0.67.0-dev.10
       '@typespec/http': ^0.66.0 || >=0.67.0-dev <0.67.0
@@ -2429,7 +2425,7 @@ packages:
 
 snapshots:
 
-  '@alloy-js/babel-plugin-jsx-dom-expressions@0.37.21(@babel/core@7.26.9)':
+  '@alloy-js/babel-plugin-jsx-dom-expressions@0.38.0(@babel/core@7.26.9)':
     dependencies:
       '@babel/core': 7.26.9
       '@babel/helper-module-imports': 7.18.6
@@ -2438,7 +2434,7 @@ snapshots:
       html-entities: 2.3.3
       validate-html-nesting: 1.2.2
 
-  '@alloy-js/babel-plugin@0.1.0(@babel/core@7.26.9)':
+  '@alloy-js/babel-plugin@0.2.0(@babel/core@7.26.9)':
     dependencies:
       '@babel/core': 7.26.9
       '@babel/generator': 7.26.9
@@ -2446,30 +2442,29 @@ snapshots:
       '@babel/plugin-syntax-jsx': 7.25.9(@babel/core@7.26.9)
       '@babel/types': 7.26.9
 
-  '@alloy-js/babel-preset@0.1.1(@babel/core@7.26.9)':
+  '@alloy-js/babel-preset@0.2.0(@babel/core@7.26.9)':
     dependencies:
-      '@alloy-js/babel-plugin': 0.1.0(@babel/core@7.26.9)
-      '@alloy-js/babel-plugin-jsx-dom-expressions': 0.37.21(@babel/core@7.26.9)
+      '@alloy-js/babel-plugin': 0.2.0(@babel/core@7.26.9)
+      '@alloy-js/babel-plugin-jsx-dom-expressions': 0.38.0(@babel/core@7.26.9)
     transitivePeerDependencies:
       - '@babel/core'
 
-  '@alloy-js/core@0.5.0':
+  '@alloy-js/core@0.6.0':
     dependencies:
-      '@alloy-js/babel-preset': 0.1.1(@babel/core@7.26.9)
+      '@alloy-js/babel-preset': 0.2.0(@babel/core@7.26.9)
       '@babel/core': 7.26.9
       '@babel/preset-typescript': 7.26.0(@babel/core@7.26.9)
       '@vue/reactivity': 3.5.13
       chalk: 5.4.1
       cli-table3: 0.6.5
       pathe: 1.1.2
+      prettier: 3.5.3
     transitivePeerDependencies:
       - supports-color
 
-  '@alloy-js/prettier-plugin-alloy@0.1.0': {}
-
-  '@alloy-js/typescript@0.5.0':
+  '@alloy-js/typescript@0.6.0':
     dependencies:
-      '@alloy-js/core': 0.5.0
+      '@alloy-js/core': 0.6.0
       change-case: 5.4.4
       pathe: 1.1.2
     transitivePeerDependencies:
@@ -3215,10 +3210,10 @@ snapshots:
       - '@types/node'
       - supports-color
 
-  '@typespec/emitter-framework@0.3.0-dev.3(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))':
+  '@typespec/emitter-framework@0.3.0-dev.4(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))(@typespec/rest@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))))':
     dependencies:
-      '@alloy-js/core': 0.5.0
-      '@alloy-js/typescript': 0.5.0
+      '@alloy-js/core': 0.6.0
+      '@alloy-js/typescript': 0.6.0
       '@typespec/compiler': 0.67.0-dev.10(@types/node@22.13.9)
       '@typespec/http': 0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))
       '@typespec/rest': 0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))

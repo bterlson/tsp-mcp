@@ -1,3 +1,4 @@
+import { StatementList } from "@alloy-js/core";
 import { Model } from "@typespec/compiler";
 import { RestResourceCreate } from "./RestResourceCreate.jsx";
 import { RestResourceGet } from "./RestResourceGet.jsx";
@@ -9,10 +10,12 @@ export interface RestResourceProps {
 }
 
 export function RestResource(props: RestResourceProps) {
-  return <>
-    <RestResourceList type={props.type} />
-    <RestResourceCreate type={props.type} />
-    <RestResourceGet type={props.type} />
-    <RestResourceUpdate type={props.type} />
-  </>;
+  return (
+    <StatementList>
+      <RestResourceList type={props.type} />
+      <RestResourceCreate type={props.type} />
+      <RestResourceGet type={props.type} />
+      <RestResourceUpdate type={props.type} />
+    </StatementList>
+  );
 }

@@ -8,26 +8,13 @@
   "tabWidth": 2,
   "plugins": [
     "@typespec/prettier-plugin-typespec",
-    "prettier-plugin-organize-imports",
-    "@alloy-js/prettier-plugin-alloy"
+    "prettier-plugin-organize-imports"
   ],
   "overrides": [
     {
       "files": "*.tsp",
       "options": {
         "parser": "typespec"
-      }
-    },
-    {
-      "files": ["packages/**/*.tsx"],
-      "options": {
-        "parser": "alloy-ts"
-      }
-    },
-    {
-      "files": ["packages/**/*.js"],
-      "options": {
-        "parser": "alloy-js"
       }
     }
   ]

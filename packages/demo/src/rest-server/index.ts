@@ -5,15 +5,7 @@ import {
   setTodoItemHandler,
 } from "../../tsp-output/typespec-ts-data-server/index.js";
 
-const items: TodoItemRead[] = [
-  {
-    id: 0,
-    createdAt: new Date(Date.now()),
-    status: "InProgress",
-    title: "A todo item",
-    updatedAt: new Date(Date.now()),
-  },
-];
+const items: TodoItemRead[] = [];
 let currentId = 0;
 
 setTodoItemHandler({

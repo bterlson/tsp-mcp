@@ -7,9 +7,15 @@ export interface ModelProps {
 }
 
 export function ZodObject(props: ModelProps) {
-  return <>
-    {zod.z}.object({"{"}
-      <ZodModelProperties model={props.type} />
-    {"}"})
-  </>;
+  return (
+    <>
+      {zod.z}.object({"{"}
+      <indent>
+        <br />
+        <ZodModelProperties model={props.type} />
+      </indent>
+      <br />
+      {"}"})
+    </>
+  );
 }

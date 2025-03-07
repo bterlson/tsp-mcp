@@ -12,6 +12,7 @@
     "declarationMap": true,
     "jsx": "preserve",
     "emitDeclarationOnly": true,
+    "jsxImportSource": "@alloy-js/core",
     "paths": {
       "@modelcontextprotocol/sdk": ["./node_modules/@modelcontextprotocol/sdk"]
     },

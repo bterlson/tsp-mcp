@@ -1,4 +1,4 @@
-import { refkey } from "@alloy-js/core";
+import { Block, refkey } from "@alloy-js/core";
 import { Model, Scalar } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { getKeyProp, resourceName } from "../utils.js";
@@ -13,13 +13,20 @@ export interface RestResourceDeleteProps {
 export function RestResourceDelete(props: RestResourceDeleteProps) {
   const path = "/" + resourceName(props.type) + "/:id";
   const keyProp = getKeyProp(props.type)?.type ?? $.builtin.string;
-  return <>
-    {HonoApp}.delete("{path}", async (c) ={">"} {"{"}
-      <RestResourceCheckHandler type={props.type} />
-
-      return c.json(await {refkey(props.type, "handler-value")}.read(<Coerce from={$.builtin.string} to={keyProp as Scalar}>
+  return (
+    <>
+      {HonoApp}.delete("{path}", async (c) ={">"}{" "}
+      <Block>
+        <RestResourceCheckHandler type={props.type} />
+        <hbr />
+        <hbr />
+        return c.json(await {refkey(props.type, "handler-value")}.read(
+        <Coerce from={$.builtin.string} to={keyProp as Scalar}>
           c.req.param("id")
-      </Coerce>), 200);
-    {"}"})
-  </>;
+        </Coerce>
+        ), 200);
+      </Block>
+      )
+    </>
+  );
 }

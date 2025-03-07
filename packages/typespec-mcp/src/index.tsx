@@ -1,26 +1,31 @@
 import { mapJoin, Output } from "@alloy-js/core";
-import { SourceFile } from "@alloy-js/typescript";
+import { BarrelFile, SourceFile } from "@alloy-js/typescript";
 import { EmitContext, Model, navigateProgram } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { writeOutput } from "@typespec/emitter-framework";
-import { zod, ZodTypeDeclaration } from "typespec-zod";  // Updated import
-import { generateMcpServerProject, McpServerOptions } from "./components/McpServer.js";
+import { zod, ZodTypeDeclaration } from "typespec-zod"; // Updated import
+import { McpServerOptions } from "./components/McpServer.js";
 
 export async function $onEmit(context: EmitContext) {
   const models = getAllModels(context);
-  const modelDecls = mapJoin(models, (type) => <ZodTypeDeclaration type={type} export={true}/>);  // Updated component and prop
+  const modelDecls = mapJoin(models, (type) => <ZodTypeDeclaration type={type} export />); // Updated component and prop
 
   // There are two things to emit:
   // 1. The Zod models.  This is already done here by emitting modelDecls.
   writeOutput(
     <Output externals={[zod]}>
-      <SourceFile path="types.ts">
+      <SourceFile path="zod-types.ts">
         {modelDecls}
       </SourceFile>
+      <SourceFile path="mcp-server.ts">
+        <McpServer2 models={models} />
+      </SourceFile>
+      <BarrelFile />
     </Output>,
     context.emitterOutputDir,
   );
 
+  /*
   // 2. The McpServer code, project files like package.json, etc.
   // Extract operations from the program
   const operations = extractOperations(context);
@@ -73,24 +78,25 @@ startMcpServer();`}
     </Output>,
     context.emitterOutputDir,
   );
+  */
 }
 
 // Helper function to extract operations from the TypeSpec program
-function extractOperations(context: EmitContext): McpServerOptions['operations'] {
+function extractOperations(context: EmitContext): McpServerOptions["operations"] {
   // Simplified stub implementation - will be enhanced later
   return [
     {
       operationId: "exampleGet",
       path: "/api/example",
       method: "get",
-      description: "Example GET operation"
+      description: "Example GET operation",
     },
     {
       operationId: "examplePost",
       path: "/api/example",
       method: "post",
-      description: "Example POST operation"
-    }
+      description: "Example POST operation",
+    },
   ];
 }
 

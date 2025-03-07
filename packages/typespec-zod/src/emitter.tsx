@@ -58,21 +58,29 @@ export async function $onEmit(context: EmitContext) {
       <ts.PackageDirectory name="test-package" version="0.0.1" path=".">
         <ay.SourceDirectory path="src">
           <ts.SourceFile path="models.ts">
-            {ay.mapJoin(
-              enums,
-              (enumInstance) => {
-                return <ZodEnum type={enumInstance} />;
-              },
-              { joiner: "\n\n" }
-            )}
-
-            {ay.mapJoin(
-              models,
-              (model) => {
-                return <ZodTypeDeclaration type={model} />;
-              },
-              { joiner: "\n\n" }
-            )}
+            <ay.For
+              each={enums}
+              joiner={
+                <>
+                  <hbr />
+                  <hbr />
+                </>
+              }
+              ender
+            >
+              {(enumInstance) => <ZodEnum type={enumInstance} />}
+            </ay.For>
+            <ay.For
+              each={models}
+              joiner={
+                <>
+                  <hbr />
+                  <hbr />
+                </>
+              }
+            >
+              {(model) => <ZodTypeDeclaration type={model} />}
+            </ay.For>
           </ts.SourceFile>
         </ay.SourceDirectory>
       </ts.PackageDirectory>

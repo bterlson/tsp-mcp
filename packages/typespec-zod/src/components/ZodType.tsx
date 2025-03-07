@@ -26,17 +26,23 @@ export function ZodType(props: ZodTypeProps) {
     case "Intrinsic":
       return <ZodScalarIntrinsic {...props} />;
     case "Boolean":
-      return <>
+      return (
+        <>
           {zod.z}.literal({String(props.type.value)}){optString}
-        </>;
+        </>
+      );
     case "String":
-      return <>
+      return (
+        <>
           {zod.z}.literal("{props.type.value}"){optString}
-        </>;
+        </>
+      );
     case "Number":
-      return <>
+      return (
+        <>
           {zod.z}.literal({props.type.value}){optString}
-        </>;
+        </>
+      );
   }
 
   if ($.model.is(props.type)) {
@@ -49,12 +55,13 @@ export function ZodType(props: ZodTypeProps) {
         const elementType = props.type.indexer.value;
         const elementConstraints: Constraints = getAllPropertyConstraints(elementType);
         const arrayConstraints = ZodArrayConstraints(props);
-        return <>
+        return (
+          <>
             {zod.z}.array(
-            <ZodType type={elementType} constraints={elementConstraints} />)
-            {arrayConstraints}
+            <ZodType type={elementType} constraints={elementConstraints} />){arrayConstraints}
             {optString}
-          </>;
+          </>
+        );
       }
     }
 
@@ -62,21 +69,24 @@ export function ZodType(props: ZodTypeProps) {
       if (props.type.indexer !== undefined) {
         const elementType = props.type.indexer.value;
         const elementConstraints: Constraints = getAllPropertyConstraints(elementType);
-        return <>
+        return (
+          <>
             {zod.z}.record(z.string(),
-            <ZodType type={elementType} constraints={elementConstraints} />)
-            {optString}
-          </>;
+            <ZodType type={elementType} constraints={elementConstraints} />){optString}
+          </>
+        );
       }
     }
 
     // Just a plain-old model - reference it instead of emitting it inline
     const namePolicy = ts.useTSNamePolicy();
     const modelName = namePolicy.getName(props.type.name, "variable");
-    return <>
+    return (
+      <>
         {modelName}
         {optString}
-      </>;
+      </>
+    );
   }
 
   // Unions
@@ -84,7 +94,7 @@ export function ZodType(props: ZodTypeProps) {
     const unionTypes = props.type.variants;
 
     const unionTypeNames = ay.mapJoin(
-      unionTypes,
+      () => unionTypes,
       (name, entry) => {
         const elementConstraints: Constraints = getAllPropertyConstraints(entry.type);
         return <ZodType type={entry.type} constraints={elementConstraints} />;
@@ -92,20 +102,26 @@ export function ZodType(props: ZodTypeProps) {
       { joiner: ", " },
     );
 
-    return <>
+    return (
+      <>
         {zod.z}.union([ {unionTypeNames} ]){optString}
-      </>;
+      </>
+    );
   }
 
   // Reference to another model property
   if ($.modelProperty.is(props.type)) {
     const propConstraints = getAllPropertyConstraints(props.type);
-    return <>
+    return (
+      <>
         <ZodType type={props.type.type} constraints={propConstraints} />
         {optString}
-      </>;
+      </>
+    );
   }
-  return <>
+  return (
+    <>
       {zod.z}.any(){optString}
-    </>;
+    </>
+  );
 }

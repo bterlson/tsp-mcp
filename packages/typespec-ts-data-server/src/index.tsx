@@ -1,4 +1,4 @@
-import { mapJoin, Output, refkey } from "@alloy-js/core";
+import { Block, For, Output, refkey, StatementList } from "@alloy-js/core";
 import {
   BarrelFile,
   Declaration,
@@ -20,41 +20,49 @@ import { HonoApp } from "./well-known-symbols.js";
 
 export async function $onEmit(context: EmitContext) {
   const models = getAllModels(context);
-  const zodModelDecls = mapJoin(models, (model) => <ZodTypeDeclarations type={model} />);
-  const tsModelDecls = mapJoin(models, (model) => <TsTypeDeclarations type={model} />);
-  const restEndpoints = mapJoin(models, (model) => <RestResource type={model} />);
-  const handlers = mapJoin(models, (model) => <TypeHandler type={model} />);
 
   writeOutput(
     <Output externals={[zod, hono, zValidator]}>
       <SourceFile path="utils.ts">
-        
-        <Declaration export refkey={refkey("http-envelope")} name="HttpEnvelope" nameKind="interface">
-          interface HttpEnvelope{"<"}T{">"} {"{"}
-            status: number,
-            body: T | {refkey("http-error")}
-          {"}"}
+        <Declaration
+          export
+          refkey={refkey("http-envelope")}
+          name="HttpEnvelope"
+          nameKind="interface"
+        >
+          interface HttpEnvelope{"<"}T{">"}{" "}
+          <Block>
+            status: number;
+            <hbr />
+            body: T | {refkey("http-error")};
+          </Block>
         </Declaration>
+        <hbr />
 
         <InterfaceDeclaration export refkey={refkey("http-error")} name="HttpError">
-          <InterfaceMember name="code">string</InterfaceMember>
-          <InterfaceMember name="message">string</InterfaceMember>
+          <StatementList>
+            <InterfaceMember name="code">string</InterfaceMember>
+            <InterfaceMember name="message">string</InterfaceMember>
+          </StatementList>
         </InterfaceDeclaration>
       </SourceFile>
       <SourceFile path="ts-types.ts">
-        {tsModelDecls}
+        <For each={models}>{(model) => <TsTypeDeclarations type={model} />}</For>
       </SourceFile>
       <SourceFile path="zod-types.ts">
-        {zodModelDecls}
+        <For each={models}>{(model) => <ZodTypeDeclarations type={model} />}</For>
       </SourceFile>
       <SourceFile path="app.ts">
         <VarDeclaration export refkey={HonoApp} name="app">
           new {hono.Hono}()
         </VarDeclaration>
-        {restEndpoints}
+        ;<hbr />
+        <For each={models} hardline>
+          {(model) => <RestResource type={model} />}
+        </For>
       </SourceFile>
       <SourceFile path="handlers.ts">
-        {handlers}
+        <For each={models}>{(model) => <TypeHandler type={model} />}</For>
       </SourceFile>
 
       <BarrelFile />
