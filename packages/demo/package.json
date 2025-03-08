@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsp compile main.tsp --emit typespec-ts-data-server && tsc -p ."
+    "build": "tsp compile main.tsp --emit typespec-ts-data-server --emit typespec-mcp && tsc -p ."
   },
   "keywords": [],
   "author": "",

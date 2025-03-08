@@ -1,21 +1,20 @@
-import { mapJoin, Output } from "@alloy-js/core";
+import { For, Output } from "@alloy-js/core";
 import { BarrelFile, SourceFile } from "@alloy-js/typescript";
 import { EmitContext, Model, navigateProgram } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { writeOutput } from "@typespec/emitter-framework";
-import { zod, ZodTypeDeclaration } from "typespec-zod"; // Updated import
-import { McpServerOptions } from "./components/McpServer.js";
+import { zod } from "typespec-zod"; // Updated import
+import { McpServer2 } from "./components/McpServer2.jsx";
+import { ZodTypeDeclarations } from "./components/ZodTypeDecarations.jsx";
+import { mcp, zodToJsonSchema } from "./externals.js";
 
 export async function $onEmit(context: EmitContext) {
   const models = getAllModels(context);
-  const modelDecls = mapJoin(models, (type) => <ZodTypeDeclaration type={type} export />); // Updated component and prop
 
-  // There are two things to emit:
-  // 1. The Zod models.  This is already done here by emitting modelDecls.
-  writeOutput(
-    <Output externals={[zod]}>
+  await writeOutput(
+    <Output externals={[zod, mcp, zodToJsonSchema]}>
       <SourceFile path="zod-types.ts">
-        {modelDecls}
+        <For each={models}>{(model) => <ZodTypeDeclarations type={model} />}</For>
       </SourceFile>
       <SourceFile path="mcp-server.ts">
         <McpServer2 models={models} />
@@ -80,7 +79,7 @@ startMcpServer();`}
   );
   */
 }
-
+/*
 // Helper function to extract operations from the TypeSpec program
 function extractOperations(context: EmitContext): McpServerOptions["operations"] {
   // Simplified stub implementation - will be enhanced later
@@ -99,6 +98,7 @@ function extractOperations(context: EmitContext): McpServerOptions["operations"]
     },
   ];
 }
+  */
 
 function getAllModels(context: EmitContext) {
   const models: Model[] = [];

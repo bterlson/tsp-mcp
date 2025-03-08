@@ -23,14 +23,17 @@
     "@modelcontextprotocol/sdk": "^1.6.1",
     "@typespec/compiler": "catalog:",
     "@typespec/emitter-framework": "catalog:",
-    "@typespec/rest": "^0.66.0",
     "@typespec/http": "0.66.0",
+    "@typespec/rest": "^0.66.0",
+    "change-case": "^5.4.4",
+    "pluralize": "^8.0.0",
     "typespec-zod": "workspace:~"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",
     "@babel/core": "^7.24.9",
     "@rollup/plugin-babel": "^6.0.4",
+    "@types/pluralize": "^0.0.33",
     "concurrently": "^8.2.2",
     "typescript": "catalog:",
     "vitest": "catalog:"

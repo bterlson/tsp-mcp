@@ -100,6 +100,12 @@ importers:
       '@typespec/rest':
         specifier: ^0.66.0
         version: 0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9))(@typespec/http@0.66.0(@typespec/compiler@0.67.0-dev.10(@types/node@22.13.9)))
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       typespec-zod:
         specifier: workspace:~
         version: link:../typespec-zod
@@ -113,6 +119,9 @@ importers:
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.9)(rollup@4.34.9)
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       concurrently:
         specifier: ^8.2.2
         version: 8.2.2
