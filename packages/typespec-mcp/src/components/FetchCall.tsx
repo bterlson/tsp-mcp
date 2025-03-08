@@ -9,18 +9,17 @@ export interface FetchCallProps {
 }
 
 export function FetchCall(props: FetchCallProps) {
-  const options = {
+  const options: any = {
     method: props.method,
+  };
+  if (props.body) {
     // work around framework bug - no escaping of properties :(
-    headers: () => (
+    options.headers = () => (
       <>
         {"{"} "Content-Type": "application/json" {"}"}
       </>
-    ),
-    body: undefined as any,
-  };
-  if (props.body) {
-    options.body = props.body;
+    );
+    options.body = () => <>JSON.stringify({props.body})</>;
   }
   return (
     <FunctionCallExpression
@@ -28,10 +27,10 @@ export function FetchCall(props: FetchCallProps) {
       args={[
         props.urlString ? (
           <>
-            `${"{"}process.env['REST_ENDPOINT']{"}"}/{props.urlString}`
+            `${"{"}endpoint{"}"}/{props.urlString}`
           </>
         ) : (
-          <>process.env['REST_ENDPOINT'] + "/" + {props.url}</>
+          <>endpoint + "/" + {props.url}</>
         ),
         <ObjectExpression jsValue={options} />,
       ]}

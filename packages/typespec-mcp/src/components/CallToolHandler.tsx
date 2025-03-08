@@ -28,7 +28,7 @@ export function CallToolHandler(props: CallToolHandlerProps) {
                         await <FetchCall urlString={resourceName(type)} method="GET" />
                       </VarDeclaration>
                       <>if (!response.ok) throw new Error("HTTP Error: " + response.status)</>
-                      <VarDeclaration name="data">await response.json();</VarDeclaration>
+                      <VarDeclaration name="data">await response.json()</VarDeclaration>
                       <>
                         return <JsonToolCallResponse data={"data"} />
                       </>
@@ -61,7 +61,7 @@ export function CallToolHandler(props: CallToolHandlerProps) {
                         />
                       </VarDeclaration>
                       <>if (!response.ok) throw new Error("HTTP Error: " + response.status)</>
-                      <VarDeclaration name="data">await response.json();</VarDeclaration>
+                      <VarDeclaration name="data">await response.json()</VarDeclaration>
                       <>
                         return <JsonToolCallResponse data={"data"} />
                       </>
@@ -75,7 +75,7 @@ export function CallToolHandler(props: CallToolHandlerProps) {
                   <Scope>
                     <StatementList>
                       <>
-                        const {"{"} {keyName(type as Model)}, ... args {"}"} ={" "}
+                        const args ={" "}
                         <FunctionCallExpression
                           target={<>{refkey(type, "zod-schema-create")}.parse</>}
                           args={["request.params.arguments"]}
@@ -83,17 +83,10 @@ export function CallToolHandler(props: CallToolHandlerProps) {
                       </>
                       <VarDeclaration name="response">
                         await{" "}
-                        <FetchCall
-                          url={
-                            <>
-                              "{resourceName(type)}/" + {keyName(type as Model)}
-                            </>
-                          }
-                          method="PATCH"
-                        />
+                        <FetchCall urlString={resourceName(type)} method="POST" body={"args"} />
                       </VarDeclaration>
                       <>if (!response.ok) throw new Error("HTTP Error: " + response.status)</>
-                      <VarDeclaration name="data">await response.json();</VarDeclaration>
+                      <VarDeclaration name="data">await response.json()</VarDeclaration>
                       <>
                         return <JsonToolCallResponse data={"data"} />
                       </>
@@ -122,10 +115,11 @@ export function CallToolHandler(props: CallToolHandlerProps) {
                             </>
                           }
                           method="PATCH"
+                          body="args"
                         />
                       </VarDeclaration>
                       <>if (!response.ok) throw new Error("HTTP Error: " + response.status)</>
-                      <VarDeclaration name="data">await response.json();</VarDeclaration>
+                      <VarDeclaration name="data">await response.json()</VarDeclaration>
                       <>
                         return <JsonToolCallResponse data={"data"} />
                       </>
@@ -134,7 +128,7 @@ export function CallToolHandler(props: CallToolHandlerProps) {
                 </Block>
               </>
               <>
-                case "{toolNameForType(type, "get")}":
+                case "{toolNameForType(type, "delete")}":
                 <Block>
                   <Scope>
                     <StatementList>

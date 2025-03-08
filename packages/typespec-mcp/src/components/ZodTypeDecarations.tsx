@@ -11,7 +11,6 @@ export function ZodTypeDeclarations(props: ZodTypeDeclarationProps) {
   const createModel = modelWithVisibility(props.type, "Create");
   const updateModel = modelWithVisibility(props.type, "Update");
 
-  createModel.properties.set(keyProp.name, keyProp);
   updateModel.properties.set(keyProp.name, keyProp);
 
   const getModel = $.model.create({

@@ -1,4 +1,4 @@
-import { refkey, StatementList } from "@alloy-js/core";
+import { code, refkey, StatementList } from "@alloy-js/core";
 import { FunctionCallExpression, ObjectExpression, VarDeclaration } from "@alloy-js/typescript";
 import { Model } from "@typespec/compiler";
 import { mcp } from "../externals.js";
@@ -23,6 +23,18 @@ export function McpServer2(props: McpServer2Props) {
 
   return (
     <>
+      {code`
+        const args = process.argv.slice(2);
+        let endpoint;
+        for (let i = 0; i < args.length; i++) {
+          if (args[i] === '--endpoint' && i + 1 < args.length) {
+            endpoint = args[i + 1];
+            break;
+          }
+        }
+        endpoint ??= "http://localhost:3000";
+      `}
+      <hbr />
       <StatementList>
         <VarDeclaration export name="server" refkey={refkey("server")}>
           new{" "}

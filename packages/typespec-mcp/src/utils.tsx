@@ -11,6 +11,7 @@ import {
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { capitalCase, snakeCase } from "change-case";
 import pluralize from "pluralize";
+import { zod } from "typespec-zod";
 import { zodToJsonSchema } from "./externals.js";
 
 export function resourceName(type: Type) {
@@ -58,10 +59,26 @@ export function typeToToolDescriptors(type: Type) {
     {
       name: toolNameForType(type, "list"),
       description: `List all ${englishNamePlural}.`,
+      inputSchema: () => (
+        <FunctionCallExpression
+          target={zodToJsonSchema.zodToJsonSchema}
+          args={[
+            <>
+              {zod.z}.object({"{}"})
+            </>,
+          ]}
+        />
+      ),
     },
     {
       name: toolNameForType(type, "get"),
       description: `Get a ${englishName} by ${keyProp.name}.`,
+      inputSchema: () => (
+        <FunctionCallExpression
+          target={zodToJsonSchema.zodToJsonSchema}
+          args={[refkey(type, "zod-schema-get")]}
+        />
+      ),
     },
     {
       name: toolNameForType(type, "create"),
@@ -86,6 +103,12 @@ export function typeToToolDescriptors(type: Type) {
     {
       name: toolNameForType(type, "delete"),
       description: `Delete a ${englishName} by ${keyProp.name}.`,
+      inputSchema: () => (
+        <FunctionCallExpression
+          target={zodToJsonSchema.zodToJsonSchema}
+          args={[refkey(type, "zod-schema-get")]}
+        />
+      ),
     },
   ];
 }
