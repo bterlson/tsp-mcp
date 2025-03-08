@@ -20,7 +20,7 @@ export function RestResourceDelete(props: RestResourceDeleteProps) {
         <RestResourceCheckHandler type={props.type} />
         <hbr />
         <hbr />
-        return c.json(await {refkey(props.type, "handler-value")}.read(
+        return c.json(await {refkey(props.type, "handler-value")}.delete(
         <Coerce from={$.builtin.string} to={keyProp as Scalar}>
           c.req.param("id")
         </Coerce>
