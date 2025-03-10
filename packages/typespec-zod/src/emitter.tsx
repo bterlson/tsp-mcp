@@ -43,7 +43,6 @@ import * as ts from "@alloy-js/typescript";
 import { EmitContext, Enum, Model, navigateType } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { writeOutput } from "@typespec/emitter-framework";
-import { ZodEnum } from "./components/ZodEnum.jsx";
 import { ZodTypeDeclaration } from "./components/ZodTypeDeclaration.jsx";
 import { zod } from "./external-packages/zod.js";
 export async function $onEmit(context: EmitContext) {
@@ -68,7 +67,7 @@ export async function $onEmit(context: EmitContext) {
               }
               ender
             >
-              {(enumInstance) => <ZodEnum type={enumInstance} />}
+              {(enumInstance) => <ZodTypeDeclaration type={enumInstance} />}
             </ay.For>
             <ay.For
               each={models}
