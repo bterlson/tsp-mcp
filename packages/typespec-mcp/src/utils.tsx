@@ -164,7 +164,11 @@ export function getKeyProp(type: Model) {
   return null;
 }
 
-export function keyName(type: Model) {
+export function keyName(type: Type) {
+  if (!$.model.is(type)) {
+    throw new Error("Can only get keys for models");
+  }
+
   const keyProp = getKeyProp(type);
   if (!keyProp) {
     throw new Error("No key property found");

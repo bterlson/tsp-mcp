@@ -40,6 +40,12 @@ export function ZodTypeDeclarations(props: ZodTypeDeclarationProps) {
         name={"Zod" + props.type.name + "Update"}
         refkey={refkey(props.type, "zod-schema-update")}
       />
+      <ZodTypeDeclaration
+        type={getModel}
+        export
+        name={"Zod" + props.type.name + "Delete"}
+        refkey={refkey(props.type, "zod-schema-delete")}
+      />
     </StatementList>
   );
 }

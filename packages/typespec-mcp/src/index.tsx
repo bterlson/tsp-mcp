@@ -4,7 +4,7 @@ import { EmitContext, Model, navigateProgram } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { writeOutput } from "@typespec/emitter-framework";
 import { zod } from "typespec-zod"; // Updated import
-import { McpServer2 } from "./components/McpServer2.jsx";
+import { McpServer } from "./components/McpServer.jsx";
 import { ZodTypeDeclarations } from "./components/ZodTypeDecarations.jsx";
 import { mcp, zodToJsonSchema } from "./externals.js";
 
@@ -17,7 +17,7 @@ export async function $onEmit(context: EmitContext) {
         <For each={models}>{(model) => <ZodTypeDeclarations type={model} />}</For>
       </SourceFile>
       <SourceFile path="mcp-server.ts">
-        <McpServer2 models={models} />
+        <McpServer models={models} />
       </SourceFile>
       <BarrelFile />
     </Output>,

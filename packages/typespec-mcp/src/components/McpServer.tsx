@@ -2,14 +2,14 @@ import { code, refkey, StatementList } from "@alloy-js/core";
 import { FunctionCallExpression, ObjectExpression, VarDeclaration } from "@alloy-js/typescript";
 import { Model } from "@typespec/compiler";
 import { mcp } from "../externals.js";
-import { CallToolHandler } from "./CallToolHandler.jsx";
+import { CallToolHandlers } from "./CallToolHandlers.jsx";
 import { ListToolsHandler } from "./ListToolsHandler.jsx";
 
-export interface McpServer2Props {
+export interface McpServerProps {
   models: Model[];
 }
 
-export function McpServer2(props: McpServer2Props) {
+export function McpServer(props: McpServerProps) {
   const serverInfo = {
     name: "mcp-server",
     version: "1.0.0",
@@ -47,7 +47,7 @@ export function McpServer2(props: McpServer2Props) {
           />
         </VarDeclaration>
         <ListToolsHandler types={props.models} />
-        <CallToolHandler types={props.models} />
+        <CallToolHandlers types={props.models} />
       </StatementList>
     </>
   );
