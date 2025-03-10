@@ -1,30 +1,35 @@
-import * as ay from "@alloy-js/core";
-import * as ts from "@alloy-js/typescript";
+import { refkey } from "@alloy-js/core";
+import { MemberChainExpression } from "@alloy-js/typescript";
 import { Type } from "@typespec/compiler";
-import { $ } from "@typespec/compiler/experimental/typekit";
+import { typeBuilder } from "../chain-builders/type.js";
 import { zod } from "../external-packages/zod.js";
-import { Constraints, getAllPropertyConstraints, ZodArrayConstraints } from "../utils.js";
-import { ZodObject } from "./ZodObject.jsx";
-import { ZodScalarIntrinsic } from "./ZodScalarIntrinsic.jsx";
+import { refkeySym, shouldReference } from "../utils.js";
 
 export interface ZodTypeProps {
   type: Type;
-  constraints?: Constraints;
+  nested?: boolean;
 }
 
 /**
  * Component that translates a TypeSpec type into the Zod type
  */
 export function ZodType(props: ZodTypeProps) {
-  let optString = "";
-  if (props.constraints?.itemOptional) {
-    optString = ".optional()";
+  if (props.nested && shouldReference(props.type)) {
+    return refkey(props.type, refkeySym);
   }
 
+  return (
+    <MemberChainExpression>
+      <>{zod.z}</>
+      {typeBuilder(props.type)}
+    </MemberChainExpression>
+  );
+}
+/*
   switch (props.type.kind) {
     case "Scalar":
     case "Intrinsic":
-      return <ZodScalarIntrinsic {...props} />;
+      return <ZodScalarIntrinsic type={props.type} />;
     case "Boolean":
       return (
         <>
@@ -124,4 +129,4 @@ export function ZodType(props: ZodTypeProps) {
       {zod.z}.any(){optString}
     </>
   );
-}
+  */

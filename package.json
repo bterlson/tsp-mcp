@@ -18,7 +18,9 @@
   "pnpm": {
     "overrides": {
       "@typespec/compiler": "0.67.0-dev.10",
-      "@typespec/emitter-framework": "0.3.0-dev.4"
+      "@typespec/emitter-framework": "0.3.0-dev.4",
+      "@alloy-js/core": "https://pkg.pr.new/alloy-framework/alloy/@alloy-js/core@425f25f",
+      "@alloy-js/typescript": "https://pkg.pr.new/alloy-framework/alloy/@alloy-js/typescript@425f25f"
     }
   }
 }

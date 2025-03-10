@@ -1,6 +1,8 @@
 import { serve } from "@hono/node-server";
 import {
+  TodoItemCreate,
   TodoItemRead,
+  TodoItemUpdate,
   app,
   setTodoItemHandler,
 } from "../../tsp-output/typespec-ts-data-server/index.js";
@@ -10,61 +12,80 @@ let currentId = 0;
 
 setTodoItemHandler({
   async list() {
-    return { status: 200, body: items };
+    return {
+      status: 200,
+      body: items,
+    };
   },
-  async create(item) {
-    const now = new Date(Date.now());
+  async create(item: TodoItemCreate) {
+    const newId = ++currentId;
     const newItem: TodoItemRead = {
       ...item,
-      id: currentId++,
-      createdAt: now,
-      updatedAt: now,
+      id: newId,
+      createdAt: new Date(),
     };
+
     items.push(newItem);
 
-    return { status: 200, body: newItem };
+    return {
+      status: 201,
+      body: newItem,
+    };
   },
-  async delete(id) {
-    const index = items.findIndex((i) => i.id === id);
+  async delete(id: number) {
+    const index = items.findIndex((item) => item.id === id);
+
     if (index === -1) {
-      return { status: 404, body: { code: "not-found", message: "Todo item is not found" } };
+      return {
+        status: 404,
+        body: undefined,
+      };
     }
+
     items.splice(index, 1);
 
-    return { status: 200, body: undefined };
+    return {
+      status: 204,
+      body: undefined,
+    };
   },
-  async read(id) {
-    const item = items.find((i) => i.id === id);
+  async read(id: number) {
+    const item = items.find((item) => item.id === id);
+
     if (!item) {
-      return { status: 404, body: { code: "not-found", message: "Todo item is not found" } };
+      return {
+        status: 404,
+        body: { code: "NotFound", message: "Item not found" },
+      };
     }
-    return { status: 200, body: item };
+
+    return {
+      status: 200,
+      body: item,
+    };
   },
-  async update(id, patch) {
-    const item = items.find((i) => i.id === id)!;
+  async update(id: number, patch: TodoItemUpdate) {
+    const index = items.findIndex((item) => item.id === id);
 
-    if ("title" in patch && patch.title) {
-      item.title = patch.title;
+    if (index === -1) {
+      return {
+        status: 404,
+        body: { code: "NotFound", message: "Item not found" },
+      };
     }
 
-    if ("description" in patch && patch.description !== undefined) {
-      if (patch.description === null) {
-        delete item.description;
-      }
+    // Update item with patch data, keeping existing id and createdAt
+    const updatedItem = {
+      ...items[index],
+      ...patch,
+    };
 
-      item.description = patch.description;
-    }
+    items[index] = updatedItem;
 
-    if ("status" in patch && patch.status !== undefined) {
-      item.status = patch.status;
-    }
-
-    item.updatedAt = new Date(Date.now());
-    if (item.status === "Completed") {
-      item.completedAt = new Date(Date.now());
-    }
-
-    return { status: 200, body: item };
+    return {
+      status: 200,
+      body: updatedItem,
+    };
   },
 });
 
