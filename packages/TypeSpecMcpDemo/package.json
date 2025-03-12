@@ -3,28 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "packageManager": "pnpm@9.15.9",
   "dependencies": {
     "@hono/node-server": "^1.13.8",
     "@hono/zod-validator": "^0.4.3",
     "@modelcontextprotocol/sdk": "^1.6.1",
     "@typespec/compiler": "catalog:",
-    "express": "^4.21.2",
     "hono": "^4.7.2",
     "typescript": "catalog:",
     "typespec-mcp": "workspace:~",
     "typespec-ts-data-server": "workspace:~",
     "zod": "catalog:",
-    "zod-to-json-schema": "^3.24.3"
+    "zod-to-json-schema": "3.24.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsp compile main.tsp --emit typespec-ts-data-server --emit typespec-mcp && tsc -p ."
+    "build": "tsp compile . && tsc -p .",
+    "dev": "npm run build && node dist/src/rest-server/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/express": "^5.0.0",
     "@types/node": "^22.13.9"
   },
   "type": "module"
