@@ -1,10 +1,10 @@
 import { OpenAPIV3 } from "openapi-types";
-import camelcase from "camelcase"; // Fix import to use default import
+import camelcase from "camelcase";
 
 export function generateOperationHandlers(spec: OpenAPIV3.Document, baseUrl: string): string {
   let handlersCode = `
 import axios from "axios";
-import * as types from "./types";
+import { z } from "zod";
 
 const BASE_URL = "${baseUrl.replace(/\/openapi\.json$|\/swagger\.json$/, '')}";
 
@@ -32,10 +32,11 @@ function buildUrl(path: string, params: Record<string, any>): string {
       const mcpOperationName = camelcase(operationId);
       
       handlersCode += `
-export async function ${mcpOperationName}Handler(params: Record<string, any>) {
+export async function ${mcpOperationName}Handler(request) {
   try {
+    const params = request.params;
     // Extract path parameters
-    const pathParams: Record<string, any> = {};
+    const pathParams = {};
 `;
       
       // Handle path parameters
@@ -53,7 +54,7 @@ export async function ${mcpOperationName}Handler(params: Record<string, any>) {
       // Handle query parameters
       handlersCode += `
     // Build query parameters
-    const queryParams: Record<string, any> = {};
+    const queryParams = {};
 `;
       
       if (operation.parameters) {
@@ -69,7 +70,7 @@ export async function ${mcpOperationName}Handler(params: Record<string, any>) {
       // Handle headers
       handlersCode += `
     // Set request headers
-    const headers: Record<string, string> = {
+    const headers = {
       "Content-Type": "application/json",
       "Accept": "application/json"
     };
@@ -106,20 +107,40 @@ export async function ${mcpOperationName}Handler(params: Record<string, any>) {
       handlersCode += `
     });
     
-    // Return the response data
-    return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      return {
-        error: true,
-        status: error.response.status,
-        message: error.response.data.message || error.message,
-        details: error.response.data
-      };
-    }
+    // Return the response as text content
     return {
-      error: true,
-      message: error.message || String(error)
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(response.data, null, 2)
+        }
+      ]
+    };
+  } catch (error) {
+    let errorMessage = "An error occurred";
+    let status = 500;
+    let details = {};
+    
+    if (error.response) {
+      status = error.response.status;
+      details = error.response.data || {};
+      errorMessage = error.response.data?.message || error.message;
+    } else {
+      errorMessage = error instanceof Error ? error.message : String(error);
+    }
+    
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            error: true,
+            status,
+            message: errorMessage,
+            details
+          }, null, 2)
+        }
+      ]
     };
   }
 }

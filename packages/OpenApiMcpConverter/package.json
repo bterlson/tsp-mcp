@@ -3,16 +3,24 @@
   "version": "1.0.0",
   "description": "Tool to automatically convert OpenAPI specs to MCP servers",
   "main": "dist/src/mcp-server/index.js",
+  "type": "module",
+  "bin": {
+    "openapi-mcp": "dist/src/mcp-server/cli.js"
+  },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/mcp-server/index.js",
-    "postinstall": "npm link @modelcontextprotocol/sdk"
+    "start": "node dist/src/mcp-server/startup.js",
+    "debug": "node --trace-warnings --trace-uncaught --no-warnings dist/src/mcp-server/index.js > debug-output-stdout.log 2> debug-output-stderr.log",
+    "test-server": "node dist/src/mcp-server/test-server.js",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.7.0",
     "axios": "^1.8.3",
     "camelcase": "^7.0.1",
-    "openapi-types": "^12.1.0"
+    "openapi-types": "^12.1.0",
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.3"
   },
   "devDependencies": {
     "@types/node": "^16.11.12",
