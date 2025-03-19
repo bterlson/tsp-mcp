@@ -87,21 +87,32 @@ Make sure your `cline_mcp_settings.json` contains the server configuration:
 }
 ```
 
+## Workflow
+
+This tool provides three main operations that should be used in sequence:
+
+1. **convert_openapi_to_mcp**: 
+   - This first step converts an OpenAPI specification to MCP server code
+   - It generates the TypeScript files needed for the MCP server
+   - Example Cline prompt provided below
+
+2. **generate_mcp_server**:
+   - This second step compiles the generated TypeScript code
+   - It installs dependencies and prepares the server for running
+   - It generates usage instructions for the resulting server
+
+3. **test_mcp_server**:
+   - **Important: This is only an emulation for testing**
+   - This does NOT connect to a running instance of the generated server
+   - It only imports the handlers and executes them directly for testing purposes
+   - For real usage, you should start the generated server using the command provided
+
+4. **Manual Step: Start the generated server**
+   - After generation and compilation, you need to manually start the server
+   - Use the command provided in the response from step 2
+   - Configure your MCP clients (like Cline) to connect to this new server
+
 ### Example Prompt for Cline
 
-When working with Cline, you can use a prompt like this:
-
-Using the openApiConverter server that you now have access to in the cline_mcp_settings.json file, 
-could you convert the following OpenAPI specification to an MCP server?  
-
-URL: [URL to OpenAPI specification]
-Target directory: [Directory where the MCP server code will be generated]
-
-You can assume that the openApiConverter server is already built and already running.
-Do not try to build it or run it yourself.
-
-If you get a success=false, do not proceed. I will need to evaluate logs to see what's going wrong
-and make fixes to the server. However, if you get a "not connected" error, please investigate.
-Do not try to rebuild or restart the server, however.
-```
+When working with Cline, you can use a prompt like this for the first step:
 

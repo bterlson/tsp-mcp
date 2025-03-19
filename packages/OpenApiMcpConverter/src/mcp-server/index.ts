@@ -197,6 +197,9 @@ export async function testOperation(name, params) {
           try {
             await compileAndStartMcpServer(params.targetDirectory);
             
+            // Generate usage instructions file with examples
+            const usageInstructions = generateUsageInstructions(params.targetDirectory);
+            
             return {
               content: [
                 {
@@ -205,6 +208,7 @@ export async function testOperation(name, params) {
                     success: true,
                     message: "MCP server compiled successfully",
                     runCommand: `node ${path.join(params.targetDirectory, "dist", "index.js")}`,
+                    instructions: "A usage-instructions.md file has been created in your target directory with examples of how to use your server",
                     diagnostics
                   }, null, 2)
                 }
@@ -330,3 +334,65 @@ export async function testOperation(name, params) {
     }
   }
 );
+
+// Helper function to generate usage instructions
+function generateUsageInstructions(targetDirectory: string): void {
+  try {
+    const instructions = `# Using Your Generated MCP Server
+
+## Starting the Server
+
+To start your MCP server:
+
+\`\`\`bash
+cd ${targetDirectory}
+node dist/index.js
+\`\`\`
+
+This will start the MCP server on the standard input/output streams.
+
+## Configuration with Cline
+
+To configure Cline to use your new MCP server, add the following to your \`cline_mcp_settings.json\` file:
+
+\`\`\`json
+{
+  "mcpServers": {
+    "myGeneratedServer": {
+      "command": "node",
+      "args": [
+        "${path.join(targetDirectory, "dist/index.js").replace(/\\/g, '\\\\')}"
+      ],
+      "cwd": "${targetDirectory.replace(/\\/g, '\\\\')}",
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+\`\`\`
+
+## Example Prompts for Cline
+
+You can use prompts like this with Cline:
+
+\`\`\`
+Using the myGeneratedServer MCP server, could you help me with the following operation?
+
+I'd like to [describe what you want to do with one of the operations]
+\`\`\`
+
+## Available Operations
+
+The server has these operations available based on the OpenAPI specification:
+[These will be displayed in the server output when it starts]
+
+## Testing
+
+You can test operations directly with curl or any API client by making HTTP requests to the endpoint.
+`;
+
+    fs.writeFileSync(path.join(targetDirectory, "usage-instructions.md"), instructions);
+  } catch (error) {
+    console.error("Failed to write usage instructions:", error);
+  }
+}
