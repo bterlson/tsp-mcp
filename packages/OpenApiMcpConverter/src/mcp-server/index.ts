@@ -180,29 +180,69 @@ export async function testOperation(name, params) {
       case "generate_mcp_server": {
         try {
           const params = GenerateMcpServerSchema.parse(request.params.arguments);
-          await compileAndStartMcpServer(params.targetDirectory);
+          
+          // Capture extensive diagnostic information before any processing
+          const diagnostics = {
+            cwd: process.cwd(),
+            targetDir: params.targetDirectory,
+            resolvedPath: path.resolve(params.targetDirectory),
+            env: process.env.NODE_ENV || 'not set',
+            platform: process.platform,
+            nodeVersion: process.version,
+            moduleType: 'ES Modules',
+            timestampUTC: new Date().toISOString(),
+            requestParams: JSON.stringify(params)
+          };
+          
+          try {
+            await compileAndStartMcpServer(params.targetDirectory);
+            
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    success: true,
+                    message: "MCP server compiled successfully",
+                    runCommand: `node ${path.join(params.targetDirectory, "dist", "index.js")}`,
+                    diagnostics
+                  }, null, 2)
+                }
+              ]
+            };
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            
+            // Return detailed error with extensive diagnostics
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    success: false,
+                    error: errorMessage,
+                    errorType: error instanceof Error ? error.constructor.name : typeof error,
+                    errorStack: error instanceof Error ? error.stack : 'No stack trace available',
+                    diagnostics
+                  }, null, 2)
+                }
+              ]
+            };
+          }
+        } catch (error) {
+          // Error in parsing arguments
+          const errorMessage = error instanceof Error ? error.message : String(error);
           
           return {
             content: [
               {
                 type: "text",
                 text: JSON.stringify({
-                  success: true,
-                  message: "MCP server compiled successfully",
-                  runCommand: `node ${path.join(params.targetDirectory, "dist", "index.js")}`
-                }, null, 2)
-              }
-            ]
-          };
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify({
                   success: false,
-                  error: errorMessage
+                  error: errorMessage,
+                  context: "Error occurred while parsing arguments",
+                  parsingError: true,
+                  rawArgs: request.params.arguments
                 }, null, 2)
               }
             ]

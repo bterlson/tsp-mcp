@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/mcp-server/startup.js",
+    "start": "node C:/Users/mattge/source/repos/tsp-mcp/packages/OpenApiMcpConverter/dist/src/mcp-server/startup.js",
     "debug": "node --trace-warnings --trace-uncaught --no-warnings dist/src/mcp-server/index.js > debug-output-stdout.log 2> debug-output-stderr.log",
     "test-server": "node dist/src/mcp-server/test-server.js",
     "prepublish": "npm run build"

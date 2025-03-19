@@ -3,13 +3,16 @@ import camelcase from "camelcase";
 
 export function generateMcpOperations(spec: OpenAPIV3.Document): string {
   let operationsCode = `
-import { McpServer } from "./src/sdk/index.js";
-import * as handlers from "./handlers.js";
+import { z } from "zod"; 
+import { zodToJsonSchema } from "zod-to-json-schema";
+// Don't import directly from MCP SDK as it might not be installed
+// import { CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 
 export function registerOperations(server) {
-  `;
+  // Register tools for listing
+  const tools = [`;
   
-  // Process each path in the OpenAPI spec
+  // Process each path in the OpenAPI spec to create the tool list
   for (const [path, pathItem] of Object.entries(spec.paths || {})) {
     // Process each method (GET, POST, etc.) for the path
     for (const [method, operationValue] of Object.entries(pathItem || {})) {
@@ -21,23 +24,32 @@ export function registerOperations(server) {
       const operationId = operation.operationId || generateOperationId(httpMethod, path);
       const mcpOperationName = camelcase(operationId);
       
-      // Generate Zod schema for validation
+      // Add tool to the list
       operationsCode += `
-          {
-            name: "${mcpOperationName}",
-            description: ${JSON.stringify(operation.summary || `${httpMethod} ${path}`)},
-            inputSchema: zodToJsonSchema(${mcpOperationName}Schema),
-          },`;
+    {
+      name: "${mcpOperationName}",
+      description: "${(operation.summary || `${httpMethod} ${path}`).replace(/"/g, '\\"')}",
+      inputSchema: zodToJsonSchema(${mcpOperationName}Schema)
+    },`;
     }
   }
   
+  // Close tools array and add server registration
   operationsCode += `
-        ],
-      };
-    }
-  );
+  ];
+  
+  // Register tools with the server
+  tools.forEach(tool => {
+    server.addOperation({
+      name: tool.name,
+      description: tool.description,
+      parameters: tool.inputSchema,
+      handler: async (params) => handlers[tool.name + "Handler"](params)
+    });
+  });
+}
 
-  // Define Zod schemas
+// Define Zod schemas for request validation
 `;
 
   // Create schemas for each operation
@@ -51,7 +63,7 @@ export function registerOperations(server) {
       const mcpOperationName = camelcase(operationId);
       
       operationsCode += `
-  const ${mcpOperationName}Schema = z.object({`;
+const ${mcpOperationName}Schema = z.object({`;
       
       // Add parameters from the OpenAPI spec
       if (operation.parameters) {
@@ -65,10 +77,10 @@ export function registerOperations(server) {
           
           if (required) {
             operationsCode += `
-    ${paramName}: ${zodType}.describe("${param.description || ''}"),`;
+  ${paramName}: ${zodType}.describe("${(param.description || '').replace(/"/g, '\\"')}"),`;
           } else {
             operationsCode += `
-    ${paramName}: ${zodType}.optional().describe("${param.description || ''}"),`;
+  ${paramName}: ${zodType}.optional().describe("${(param.description || '').replace(/"/g, '\\"')}"),`;
           }
         }
       }
@@ -78,55 +90,16 @@ export function registerOperations(server) {
         const requestBody = operation.requestBody as OpenAPIV3.RequestBodyObject;
         
         operationsCode += `
-    body: z.record(z.any())${requestBody.required ? '' : '.optional()'}.describe("Request body"),`;
+  body: z.record(z.any())${requestBody.required ? '' : '.optional()'}.describe("Request body"),`;
       }
       
       operationsCode += `
-  });
-`;
+});`;
     }
   }
   
-  // Add the call handler
-  operationsCode += `
-  // Handle tool calls
-  server.setRequestHandler(
-    CallToolRequestSchema,
-    async (request) => {
-      switch (request.params.name) {`;
-
-  // Create case statements for each operation
-  for (const [path, pathItem] of Object.entries(spec.paths || {})) {
-    for (const [method, operationValue] of Object.entries(pathItem || {})) {
-      if (method === 'parameters' || !operationValue) continue;
-      
-      const operation = operationValue as OpenAPIV3.OperationObject;
-      const httpMethod = method.toUpperCase();
-      const operationId = operation.operationId || generateOperationId(httpMethod, path);
-      const mcpOperationName = camelcase(operationId);
-      
-      operationsCode += `
-        case "${mcpOperationName}": {
-          const args = ${mcpOperationName}Schema.parse(request.params.arguments);
-          return await handlers.${mcpOperationName}Handler({ params: args });
-        }`;
-    }
-  }
-  
-  operationsCode += `
-        default:
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify({ error: \`Unknown operation: \${request.params.name}\` }, null, 2)
-              }
-            ]
-          };
-      }
-    }
-  );
-}`;
+  // Add import for handlers
+  operationsCode = `import * as handlers from "./handlers.js";\n` + operationsCode;
   
   return operationsCode;
 }
@@ -139,25 +112,6 @@ function generateOperationId(method: string, path: string): string {
       .split('/')
       .map((part, i) => i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1))
       .join('');
-}
-
-function mapOpenApiTypeToMcpType(schema: OpenAPIV3.SchemaObject): string {
-  if (!schema) return "any";
-  
-  switch(schema.type) {
-    case 'string':
-      return 'string';
-    case 'integer':
-    case 'number':
-      return 'number';
-    case 'boolean':
-      return 'boolean';
-    case 'array':
-      return 'array';
-    case 'object':
-    default:
-      return 'object';
-  }
 }
 
 function mapOpenApiTypeToZod(schema: OpenAPIV3.SchemaObject): string {
