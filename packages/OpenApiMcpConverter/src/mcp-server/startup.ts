@@ -62,10 +62,11 @@ try {
   transportInstance = new StdioServerTransport();
   
   fs.appendFileSync(logFile, `[${new Date().toISOString()}] Connecting server to transport\n`);
+  // Restore the original connection pattern that was working
   await server.connect(transportInstance);
   serverInstance = server;
   
-  fs.appendFileSync(logFile, `[${new Date().toISOString()}] Server connected to transport\n`);
+  fs.appendFileSync(logFile, `[${new Date().toISOString()}] Transport connected to server\n`);
   console.error(`OpenAPI to MCP Converter running on stdio (PID: ${process.pid})`);
   
   // Add event handlers to capture process events

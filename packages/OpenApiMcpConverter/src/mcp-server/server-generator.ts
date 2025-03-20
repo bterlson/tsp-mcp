@@ -16,57 +16,6 @@ export async function compileAndStartMcpServer(targetDirectory: string): Promise
     // Convert potential relative path to absolute path
     normalizedTargetDir = path.resolve(normalizedTargetDir);
     
-    // Create sdk directory and file
-    const sdkDirPath = path.join(normalizedTargetDir, "src", "sdk");
-    if (!fs.existsSync(sdkDirPath)) {
-      fs.mkdirSync(sdkDirPath, { recursive: true });
-    }
-
-    // Create SDK template directly
-    const sdkTemplate = `
-/**
- * Simple implementation of the MCP server for testing
- */
-export class McpServer {
-  operations = new Map();
-
-  constructor() {
-    console.log("MCP Server initialized");
-  }
-
-  addOperation(operation) {
-    this.operations.set(operation.name, operation);
-    console.log(\`Operation '\${operation.name}' registered\`);
-  }
-
-  async start() {
-    console.log("MCP Server started and listening for requests");
-    
-    // Handle process signals for clean shutdown
-    process.on("SIGINT", () => {
-      console.log("Shutting down MCP Server...");
-      process.exit(0);
-    });
-
-    // Keep the process alive
-    setInterval(() => {}, 1000);
-  }
-
-  // For testing
-  async testOperation(name, params) {
-    const operation = this.operations.get(name);
-    if (!operation) {
-      throw new Error(\`Operation '\${name}' not found\`);
-    }
-    
-    return await operation.handler(params);
-  }
-}
-`;
-
-    // Write the SDK implementation as JavaScript
-    fs.writeFileSync(path.join(sdkDirPath, 'index.js'), sdkTemplate);
-    
     // Create package.json if it doesn't exist
     const packageJsonPath = path.join(normalizedTargetDir, "package.json");
     if (!fs.existsSync(packageJsonPath)) {

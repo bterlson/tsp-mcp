@@ -69,8 +69,11 @@ server.setRequestHandler(
 server.setRequestHandler(
   CallToolRequestSchema,
   async (request) => {
+    console.error(`Received tool call request: ${request.params.name}`);
+    
     switch (request.params.name) {
       case "convert_openapi_to_mcp": {
+        console.error(`Processing convert_openapi_to_mcp with arguments: ${JSON.stringify(request.params.arguments)}`);
         try {
           const params = ConvertOpenApiToMcpSchema.parse(request.params.arguments);
           
@@ -120,18 +123,51 @@ server.setRequestHandler(
           fs.writeFileSync(
             path.join(normalizedTargetDir, "index.ts"),
             `
-import { McpServer } from "./src/sdk/index.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerOperations } from "./operations.js";
+import * as handlers from "./handlers.js";
 
-const server = new McpServer();
+// Create and export the server instance
+export const server = new Server(
+  {
+    name: "openapi-mcp-server",
+    version: "1.0.0",
+  },
+  {
+    capabilities: {
+      tools: {},
+    },
+  }
+);
+
+// Register all operations with the server
 registerOperations(server);
-server.start();
 
-// Export a function to test operations programmatically
-export async function testOperation(name, params) {
-  return server.testOperation(name, params);
+// Export handlers for direct access if needed
+export { handlers };
+
+// When this file is executed directly (like "node dist/index.js"), run the server
+if (import.meta.url.endsWith(process.argv[1].replace(/\\\\/g, '/'))) {
+  // Create transport
+  const transport = new StdioServerTransport();
+  console.log("Created stdio transport");
+  
+  // Connect server to transport - use the same pattern as our own server
+  server.connect(transport)
+    .then(() => {
+      console.log("Server connected to transport");
+      console.error("MCP Server running on stdio");
+    })
+    .catch(error => {
+      console.error("Failed to start server:", error);
+      process.exit(1);
+    });
+    
+  // Keep the process alive
+  setInterval(() => {}, 1000);
 }
-            `.trim()
+`.trim()
           );
           
           // Safely get operation paths
@@ -178,6 +214,7 @@ export async function testOperation(name, params) {
       }
       
       case "generate_mcp_server": {
+        console.error(`Processing generate_mcp_server with arguments: ${JSON.stringify(request.params.arguments)}`);
         try {
           const params = GenerateMcpServerSchema.parse(request.params.arguments);
           
@@ -255,6 +292,7 @@ export async function testOperation(name, params) {
       }
       
       case "test_mcp_server": {
+        console.error(`Processing test_mcp_server with arguments: ${JSON.stringify(request.params.arguments)}`);
         try {
           const params = TestMcpServerSchema.parse(request.params.arguments);
           
@@ -266,45 +304,104 @@ export async function testOperation(name, params) {
           
           // Convert to absolute path
           const targetPath = path.resolve(normalizedTargetDir);
-          const modulePath = path.join(targetPath, "dist", "index.js");
+          const distPath = path.join(targetPath, "dist");
+          const handlersPath = path.join(distPath, "handlers.js");
           
-          // Check if the module exists
-          if (!fs.existsSync(modulePath)) {
+          // Check if the compiled handlers exist
+          if (!fs.existsSync(handlersPath)) {
             return {
               content: [
                 {
                   type: "text",
                   text: JSON.stringify({
                     success: false,
-                    error: `Module not found: ${modulePath}. Make sure you have run generate_mcp_server first.`
+                    error: `Handlers module not found: ${handlersPath}. Make sure you have run generate_mcp_server first.`
                   }, null, 2)
                 }
               ]
             };
           }
           
-          // Convert to file:// URL for import()
-          const moduleUrl = `file://${modulePath.replace(/\\/g, '/')}`;
+          // Convert operation name if it's in "METHOD /path" format
+          let operationName = params.operationName;
+          let handlerName;
           
-          // Dynamic import of the generated MCP server
-          const serverModule = await import(moduleUrl);
+          if (operationName.includes(' ')) {
+            // Split "GET /api/v1/provinces" into method and path
+            const [method, path] = operationName.split(' ', 2);
+            // Convert to camelCase operation name
+            operationName = method.toLowerCase() + 
+              path.replace(/\/{([^}]+)}/g, 'By$1')
+                 .replace(/^\//, '')
+                 .split('/')
+                 .map((part, i) => i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1))
+                 .join('');
+          }
           
-          // Test the specified operation
-          const result = await serverModule.testOperation(params.operationName, params.parameters);
+          handlerName = `${operationName}Handler`;
           
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify({
-                  success: true,
-                  operationName: params.operationName,
-                  result
-                }, null, 2)
-              }
-            ]
-          };
+          console.error(`Will try to execute handler: ${handlerName}`);
+          
+          try {
+            // Import the handlers module directly without server initialization
+            const handlersUrl = `file://${handlersPath.replace(/\\/g, '/')}`;
+            const handlersModule = await import(handlersUrl);
+            
+            // If there's a default export with all handlers, use that
+            const handlers = handlersModule.default || handlersModule;
+            
+            // Look for the handler function
+            const handler = handlers[handlerName] || handlersModule[handlerName];
+            
+            if (!handler || typeof handler !== 'function') {
+              const availableHandlers = Object.keys(handlers)
+                .filter(key => typeof handlers[key] === 'function')
+                .join(', ');
+                
+              throw new Error(`Handler '${handlerName}' not found. Available handlers: ${availableHandlers}`);
+            }
+            
+            console.error(`Executing handler ${handlerName} with params:`, params.parameters);
+            
+            // Call the handler directly with a properly formatted request object
+            const result = await handler({ 
+              params: params.parameters,
+              // Add any other context needed by the handler
+              context: { testMode: true }
+            });
+            
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    success: true,
+                    operationName: operationName,
+                    originalOperationName: params.operationName,
+                    result
+                  }, null, 2)
+                }
+              ]
+            };
+          } catch (error) {
+            console.error(`Error executing handler: ${error instanceof Error ? error.stack : String(error)}`);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    success: false,
+                    error: errorMessage,
+                    operationName: operationName,
+                    handlerName: handlerName
+                  }, null, 2)
+                }
+              ]
+            };
+          }
         } catch (error) {
+          console.error(`Error processing test_mcp_server: ${error instanceof Error ? error.stack : String(error)}`);
           const errorMessage = error instanceof Error ? error.message : String(error);
           return {
             content: [
@@ -320,7 +417,8 @@ export async function testOperation(name, params) {
         }
       }
       
-      default:
+      default: {
+        console.error(`Unknown tool requested: ${request.params.name}`);
         return {
           content: [
             {
@@ -331,6 +429,7 @@ export async function testOperation(name, params) {
             }
           ]
         };
+      }
     }
   }
 );
@@ -365,7 +464,7 @@ To configure Cline to use your new MCP server, add the following to your \`cline
       ],
       "cwd": "${targetDirectory.replace(/\\/g, '\\\\')}",
       "disabled": false,
-      "autoApprove": []
+      "autoApprove": [],
     }
   }
 }
@@ -375,11 +474,8 @@ To configure Cline to use your new MCP server, add the following to your \`cline
 
 You can use prompts like this with Cline:
 
-\`\`\`
 Using the myGeneratedServer MCP server, could you help me with the following operation?
-
 I'd like to [describe what you want to do with one of the operations]
-\`\`\`
 
 ## Available Operations
 
@@ -390,7 +486,6 @@ The server has these operations available based on the OpenAPI specification:
 
 You can test operations directly with curl or any API client by making HTTP requests to the endpoint.
 `;
-
     fs.writeFileSync(path.join(targetDirectory, "usage-instructions.md"), instructions);
   } catch (error) {
     console.error("Failed to write usage instructions:", error);

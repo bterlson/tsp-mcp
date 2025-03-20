@@ -5,52 +5,85 @@ export function generateMcpOperations(spec: OpenAPIV3.Document): string {
   let operationsCode = `
 import { z } from "zod"; 
 import { zodToJsonSchema } from "zod-to-json-schema";
-// Don't import directly from MCP SDK as it might not be installed
-// import { CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import * as handlers from "./handlers.js";
 
 export function registerOperations(server) {
-  // Register tools for listing
-  const tools = [`;
+  console.log("Registering MCP operations with server");
+
+  // Set up request handler for listing tools
+  server.setRequestHandler(
+    ListToolsRequestSchema,
+    async () => {
+      return {
+        tools: [`;
   
-  // Process each path in the OpenAPI spec to create the tool list
+  // Generate tools array
   for (const [path, pathItem] of Object.entries(spec.paths || {})) {
-    // Process each method (GET, POST, etc.) for the path
     for (const [method, operationValue] of Object.entries(pathItem || {})) {
-      if (method === 'parameters' || !operationValue) continue; // Skip non-operation properties
+      if (method === 'parameters' || !operationValue) continue;
       
-      // Cast to specific type
       const operation = operationValue as OpenAPIV3.OperationObject;
       const httpMethod = method.toUpperCase();
       const operationId = operation.operationId || generateOperationId(httpMethod, path);
       const mcpOperationName = camelcase(operationId);
       
-      // Add tool to the list
       operationsCode += `
-    {
-      name: "${mcpOperationName}",
-      description: "${(operation.summary || `${httpMethod} ${path}`).replace(/"/g, '\\"')}",
-      inputSchema: zodToJsonSchema(${mcpOperationName}Schema)
-    },`;
+          {
+            name: "${mcpOperationName}",
+            description: "${(operation.summary || `${httpMethod} ${path}`).replace(/"/g, '\\"')}",
+            inputSchema: zodToJsonSchema(${mcpOperationName}Schema),
+          },`;
     }
   }
   
-  // Close tools array and add server registration
   operationsCode += `
-  ];
+        ]
+      };
+    }
+  );
+
+  // Set up request handler for calling tools
+  server.setRequestHandler(
+    CallToolRequestSchema,
+    async (request) => {
+      switch (request.params.name) {`;
   
-  // Register tools with the server
-  tools.forEach(tool => {
-    server.addOperation({
-      name: tool.name,
-      description: tool.description,
-      parameters: tool.inputSchema,
-      handler: async (params) => handlers[tool.name + "Handler"](params)
-    });
-  });
+  // Generate case statements for each operation
+  for (const [path, pathItem] of Object.entries(spec.paths || {})) {
+    for (const [method, operationValue] of Object.entries(pathItem || {})) {
+      if (method === 'parameters' || !operationValue) continue;
+      
+      const operation = operationValue as OpenAPIV3.OperationObject;
+      const httpMethod = method.toUpperCase();
+      const operationId = operation.operationId || generateOperationId(httpMethod, path);
+      const mcpOperationName = camelcase(operationId);
+      
+      operationsCode += `
+        case "${mcpOperationName}": {
+          return handlers.${mcpOperationName}Handler(request);
+        }`;
+    }
+  }
+  
+  operationsCode += `
+        default:
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify({
+                  error: \`Unknown tool: \${request.params.name}\`
+                }, null, 2)
+              }
+            ]
+          };
+      }
+    }
+  );
 }
 
-// Define Zod schemas for request validation
-`;
+// Define Zod schemas for request validation`;
 
   // Create schemas for each operation
   for (const [path, pathItem] of Object.entries(spec.paths || {})) {
@@ -97,9 +130,6 @@ const ${mcpOperationName}Schema = z.object({`;
 });`;
     }
   }
-  
-  // Add import for handlers
-  operationsCode = `import * as handlers from "./handlers.js";\n` + operationsCode;
   
   return operationsCode;
 }
