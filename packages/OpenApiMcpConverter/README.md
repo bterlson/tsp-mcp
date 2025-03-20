@@ -9,7 +9,7 @@ The OpenAPI to MCP Converter:
 1. Reads an OpenAPI specification
 2. Generates TypeScript code for an MCP server
 3. Compiles the TypeScript code
-4. Provides tools for testing the generated server
+4. Creates a functioning MCP server that proxies requests to the original REST API
 
 ## Project Structure
 
@@ -79,8 +79,7 @@ Make sure your `cline_mcp_settings.json` contains the server configuration:
       "disabled": false,
       "autoApprove": [
         "convert_openapi_to_mcp",
-        "generate_mcp_server",
-        "test_mcp_server"
+        "generate_mcp_server"
       ]
     }
   }
@@ -89,7 +88,7 @@ Make sure your `cline_mcp_settings.json` contains the server configuration:
 
 ## Workflow
 
-This tool provides three main operations that should be used in sequence:
+This tool provides two main operations that should be used in sequence:
 
 1. **convert_openapi_to_mcp**: 
    - This first step converts an OpenAPI specification to MCP server code
@@ -101,13 +100,7 @@ This tool provides three main operations that should be used in sequence:
    - It installs dependencies and prepares the server for running
    - It generates usage instructions for the resulting server
 
-3. **test_mcp_server**:
-   - **Important: This is only an emulation for testing**
-   - This does NOT connect to a running instance of the generated server
-   - It only imports the handlers and executes them directly for testing purposes
-   - For real usage, you should start the generated server using the command provided
-
-4. **Manual Step: Start the generated server**
+3. **Manual Step: Start the generated server**
    - After generation and compilation, you need to manually start the server
    - Use the command provided in the response from step 2
    - Configure your MCP clients (like Cline) to connect to this new server

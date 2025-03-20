@@ -55,11 +55,7 @@ server.setRequestHandler(
           description: "Compiles and prepares the generated MCP server code",
           inputSchema: zodToJsonSchema(GenerateMcpServerSchema),
         },
-        {
-          name: "test_mcp_server",
-          description: "Tests operations of the generated MCP server",
-          inputSchema: zodToJsonSchema(TestMcpServerSchema),
-        }
+        // Removed test_mcp_server from exposed tools
       ]
     };
   }
@@ -292,6 +288,7 @@ if (import.meta.url.endsWith(process.argv[1].replace(/\\\\/g, '/'))) {
       }
       
       case "test_mcp_server": {
+        // Tool still exists in code but isn't exposed in tool listing
         console.error(`Processing test_mcp_server with arguments: ${JSON.stringify(request.params.arguments)}`);
         try {
           const params = TestMcpServerSchema.parse(request.params.arguments);
