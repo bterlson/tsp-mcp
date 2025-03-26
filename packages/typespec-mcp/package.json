@@ -6,12 +6,15 @@
   "main": "dist/src/index.js",
   "scripts": {
     "build-src": "babel src -d dist/src --extensions '.ts,.tsx'",
-    "build": "tsc -p . && npm run build-src",
+    "build": "tsc && esbuild --bundle src/index.tsx --outdir=dist --platform=node --external:@typespec/compiler --format=esm",
+    "build-tsc": "tsc",
     "watch-src": "babel src -d dist/src --extensions '.ts,.tsx' --watch",
     "watch-tsc": "tsc -p . --watch",
     "watch": "concurrently --kill-others \"npm run watch-tsc\" \"npm run watch-src\"",
     "test": "vitest run",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "clean": "node -e \"if (require('fs').existsSync('dist')) require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "prebuild": "npm run clean"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +38,8 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@types/pluralize": "^0.0.33",
     "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.20.1",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

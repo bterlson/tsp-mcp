@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean-typespec": "find . -type d -name \"node_modules\" -exec rm -rf {} + || true",
+    "clean-locks": "rm -f pnpm-lock.yaml */*/pnpm-lock.yaml",
+    "reset-dependencies": "npm run clean-typespec && npm run clean-locks && pnpm install --force"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +20,10 @@
   },
   "pnpm": {
     "overrides": {
-      "@typespec/compiler": "0.67.0-dev.10",
+      "@typespec/compiler": "0.67.1",
+      "@typespec/http": "0.67.1",
+      "@typespec/rest": "0.67.1",
+      "@typespec/versioning": "0.67.1",
       "@typespec/emitter-framework": "0.3.0-dev.4",
       "@alloy-js/core": "https://pkg.pr.new/alloy-framework/alloy/@alloy-js/core@425f25f",
       "@alloy-js/typescript": "https://pkg.pr.new/alloy-framework/alloy/@alloy-js/typescript@425f25f"
