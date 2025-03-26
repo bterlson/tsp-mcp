@@ -1,7 +1,7 @@
 import { code, List, refkey } from "@alloy-js/core";
 import { FunctionCallExpression } from "@alloy-js/typescript";
-import { Type } from "@typespec/compiler";
-import { keyName, resourceName, toolNameForType } from "../utils.jsx";
+import { Model, Type } from "@typespec/compiler";
+import { keyName, resourceName, toolNameForType, debugLog, isErrorModel } from "../utils.jsx";
 import { FetchCall } from "./FetchCall.jsx";
 import { JsonToolCallResponse } from "./JsonToolCallResponse.jsx";
 import { CaseClause } from "./move-to-alloy/CaseClause.jsx";
@@ -14,16 +14,27 @@ export interface ToolHandlerProps {
 }
 
 export function ToolHandler(props: ToolHandlerProps) {
-  return (
-    <CaseClause jsCase={toolNameForType(props.type, props.action)} block>
-      <List hardline>
-        <ArgMarshalling {...props} />
-        <MakeCall {...props} />
-        <>return {<JsonToolCallResponse data={"data"} />};</>
-      </List>
-    </CaseClause>
-  );
+  try {
+    // Skip error models entirely
+    if (props.type && isErrorModel(props.type as Model)) {
+      return null;
+    }
+    
+    return (
+      <CaseClause jsCase={toolNameForType(props.type, props.action)} block>
+        <List hardline>
+          <ArgMarshalling {...props} />
+          <MakeCall {...props} />
+          <>return {<JsonToolCallResponse data={"data"} />};</>
+        </List>
+      </CaseClause>
+    );
+  } catch (error) {
+    debugLog(`Error in ToolHandler: ${(error as Error).message}`);
+    return null;
+  }
 }
+
 export interface ArgMarshallingProps {
   type: Type;
   action: Actions;

@@ -2,18 +2,32 @@ import { refkey, StatementList } from "@alloy-js/core";
 import { Model } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { ZodTypeDeclaration } from "typespec-zod";
-import { getKeyProp, modelWithVisibility } from "../utils.js";
+import { debugLog, getKeyProp, isErrorModel, modelWithVisibility } from "../utils.js";
 
 export interface ZodTypeDeclarationProps {
   type: Model;
 }
 
 export function ZodTypeDeclarations(props: ZodTypeDeclarationProps) {
+  // Special handling for error models - using the centralized isErrorModel function
+  if (isErrorModel(props.type)) {
+    return (
+      <StatementList>
+        <ZodTypeDeclaration
+          type={props.type}
+          export
+          name={"Zod" + props.type.name}
+          refkey={refkey(props.type, "zod-schema-error")}
+        />
+      </StatementList>
+    );
+  }
+  
   const keyProp = getKeyProp(props.type);
   
-  // Early return if no key property is found
+  // Early return if no key property is found for non-error models
   if (!keyProp) {
-    console.warn(`No key property found for model ${props.type.name}`);
+    debugLog(`No key property found for model ${props.type.name}`);
     return null;
   }
   

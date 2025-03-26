@@ -303,10 +303,41 @@ export function modelWithVisibility(
   }
 }
 
-// Improved getKeyProp function with minimal logging
+// Centralized list of error model names
+export const ERROR_MODEL_NAMES = ["Error", "ResourceError", "InnerError", "ErrorResponse"];
+
+// Centralized error model detection function
+export function isErrorModel(model: Model | null | undefined): boolean {
+  if (!model) return false;
+  
+  // Check by name
+  if (ERROR_MODEL_NAMES.includes(model.name)) {
+    return true;
+  }
+  
+  // Check if model extends Error
+  if (model.baseModel?.name === "Error") {
+    return true;
+  }
+  
+  // Check by decorator
+  if (model.decorators?.some(d => d.decorator.name === "error")) {
+    return true;
+  }
+  
+  return false;
+}
+
+// Improved getKeyProp function with error model awareness
 export function getKeyProp(model: Model | null | undefined): ModelProperty | null {
   if (!model) {
     debugLog("getKeyProp: model is null or undefined");
+    return null;
+  }
+  
+  // Skip key property detection for error models
+  if (isErrorModel(model)) {
+    // Return null silently for error models
     return null;
   }
   
@@ -337,6 +368,7 @@ export function getKeyProp(model: Model | null | undefined): ModelProperty | nul
   
   // If no result yet, use first property as fallback
   if (!result && model.properties.size > 0) {
+    // Only log for non-error models
     debugLog(`getKeyProp: No key property found for model ${model.name}, using fallback`);
     const firstProp = model.properties.values().next().value;
     result = firstProp || null;
@@ -347,12 +379,23 @@ export function getKeyProp(model: Model | null | undefined): ModelProperty | nul
 
 export function keyName(type: Type) {
   if (!$.model.is(type)) {
-    throw new Error("Can only get keys for models");
+    debugLog(`Error in keyName: Can only get keys for models, but received ${type?.kind || 'unknown type'}`);
+    // Return a fallback key name
+    return "id";
   }
 
-  const keyProp = getKeyProp(type);
+  const model = type as Model;
+  
+  // Handle error models separately with silent fallback
+  if (isErrorModel(model)) {
+    return "id"; // Silent fallback for error models
+  }
+
+  const keyProp = getKeyProp(model);
   if (!keyProp) {
-    throw new Error("No key property found");
+    debugLog(`Error in keyName: No key property found for model ${model.name}`);
+    // Return a fallback key name
+    return "id";
   }
   return keyProp.name;
 }
