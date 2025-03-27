@@ -6,7 +6,7 @@ import { $ } from "@typespec/compiler/experimental/typekit";
 import { TSValueExpression } from "../components/TSValueExpression.jsx";
 import { ZodExpression } from "../components/ZodExpression.jsx";
 import { ZodType } from "../components/ZodType.jsx";
-import { call, isDeclaration, isRecord, refkeySym, shouldReference } from "../utils.jsx";
+import { call, isDeclaration, isRecord, refkeySym, sanitizePropertyName, shouldReference } from "../utils.jsx";
 import { arrayConstraints, docBuilder, numericConstraints, stringConstraints } from "./common.jsx";
 import { typeBuilder } from "./type.jsx";
 
@@ -52,7 +52,10 @@ export function modelBuilder(type: Model) {
         ...docBuilder(member),
       ];
 
-      membersSpec[member.name] = () => {
+      // Sanitize property name to remove invalid characters like @ and backticks
+      const sanitizedName = sanitizePropertyName(member.name);
+
+      membersSpec[sanitizedName] = () => {
         if (shouldReference(member.type)) {
           return <MemberChainExpression>{memberComponents}</MemberChainExpression>;
         }

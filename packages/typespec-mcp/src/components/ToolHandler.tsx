@@ -1,7 +1,7 @@
 import { code, List, refkey } from "@alloy-js/core";
 import { FunctionCallExpression } from "@alloy-js/typescript";
 import { Model, Type } from "@typespec/compiler";
-import { keyName, resourceName, toolNameForType, debugLog, isErrorModel } from "../utils.jsx";
+import { keyName, resourceName, toolNameForType, debugLog, isErrorModel, sanitizePropertyName } from "../utils.jsx";
 import { FetchCall } from "./FetchCall.jsx";
 import { JsonToolCallResponse } from "./JsonToolCallResponse.jsx";
 import { CaseClause } from "./move-to-alloy/CaseClause.jsx";
@@ -82,8 +82,10 @@ export function MakeCall(props: FetchCallProps) {
           ? "PATCH"
           : "DELETE";
 
+  // Sanitize the key name for the URL path
+  const sanitizedKeyName = sanitizePropertyName(keyName(props.type));
   const url = hasId
-    ? `"${resourceName(props.type)}/" + ${keyName(props.type)}`
+    ? `"${resourceName(props.type)}/" + ${sanitizedKeyName}`
     : `"${resourceName(props.type)}"`;
 
   return code`

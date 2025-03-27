@@ -196,7 +196,9 @@ export function typeToToolDescriptors(type: Type | null | undefined) {
       const properties: Record<string, any> = {};
       if (model.properties) {
         for (const [name, prop] of model.properties.entries()) {
-          properties[name] = {
+          // Sanitize property name before adding to tool descriptor
+          const sanitizedName = sanitizePropertyName(name);
+          properties[sanitizedName] = {
             type: prop.type?.kind || 'unknown',
             optional: prop.optional || false
           };
@@ -398,4 +400,15 @@ export function keyName(type: Type) {
     return "id";
   }
   return keyProp.name;
+}
+
+/**
+ * Sanitizes a property name by removing characters that are invalid in TypeScript/Zod.
+ * 
+ * @param name The original property name
+ * @returns A sanitized version of the property name
+ */
+export function sanitizePropertyName(name: string): string {
+  // Remove characters that are invalid in JavaScript identifiers like @, backticks, etc.
+  return name.replace(/[`@]/g, '');
 }

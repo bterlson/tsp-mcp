@@ -2,7 +2,7 @@ import { refkey, StatementList } from "@alloy-js/core";
 import { Model } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { ZodTypeDeclaration } from "typespec-zod";
-import { debugLog, getKeyProp, isErrorModel, modelWithVisibility } from "../utils.js";
+import { debugLog, getKeyProp, isErrorModel, modelWithVisibility, sanitizePropertyName } from "../utils.js";
 
 export interface ZodTypeDeclarationProps {
   type: Model;
@@ -11,6 +11,7 @@ export interface ZodTypeDeclarationProps {
 export function ZodTypeDeclarations(props: ZodTypeDeclarationProps) {
   // Special handling for error models - using the centralized isErrorModel function
   if (isErrorModel(props.type)) {
+    // Sanitize model name if needed
     return (
       <StatementList>
         <ZodTypeDeclaration
@@ -34,12 +35,14 @@ export function ZodTypeDeclarations(props: ZodTypeDeclarationProps) {
   const createModel = modelWithVisibility(props.type, "Create");
   const updateModel = modelWithVisibility(props.type, "Update");
 
-  updateModel.properties.set(keyProp.name, keyProp);
+  // Make sure key property is sanitized when added to the updateModel
+  const sanitizedKeyName = sanitizePropertyName(keyProp.name);
+  updateModel.properties.set(sanitizedKeyName, keyProp);
 
   const getModel = $.model.create({
     name: props.type.name + "Get",
     properties: {
-      [keyProp.name]: keyProp,
+      [sanitizedKeyName]: keyProp,
     },
   });
 

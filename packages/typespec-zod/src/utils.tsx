@@ -151,3 +151,14 @@ export function createCycleset(types: Type[]) {
 export function call(target: string, ...args: Children[]) {
   return <FunctionCallExpression target={target} args={args} />;
 }
+
+/**
+ * Sanitizes a property name by removing characters that are invalid in TypeScript/Zod.
+ * 
+ * @param name The original property name
+ * @returns A sanitized version of the property name
+ */
+export function sanitizePropertyName(name: string): string {
+  // Remove characters that are invalid in JavaScript identifiers like @, backticks, etc.
+  return name.replace(/[`@]/g, '');
+}
