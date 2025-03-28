@@ -148,6 +148,50 @@ export function createCycleset(types: Type[]) {
   }
 }
 
+/**
+ * Checks if a type is an unresolved symbol
+ * 
+ * @param type The type to check
+ * @returns true if the type is an unresolved symbol
+ */
+export function isUnresolvedSymbol(type: any): boolean {
+  // Check for null or undefined
+  if (!type) return true;
+  
+  // Handle circular reference indicators
+  if (type.parent || type.program || type.namespace) {
+    return true;
+  }
+  
+  // Check for various indicators of an unresolved symbol
+  if (type.__unresolved === true) return true;
+  if (type.kind === "UnresolvedType") return true;
+  if (type.__nominal === "<Unresolved Symbol>") return true;
+  
+  // Check string representation
+  try {
+    const typeString = String(type);
+    if (typeString.includes("<Unresolved Symbol>")) {
+      return true;
+    }
+  } catch (e) {
+    // If we can't convert to string, assume it might be circular
+    return true;
+  }
+  
+  // Examine direct property values for "<Unresolved Symbol>"
+  for (const key in type) {
+    if (typeof type[key] === 'string' && type[key].includes("<Unresolved Symbol>")) {
+      return true;
+    }
+  }
+  
+  // Check if this might be a placeholder object with no real content
+  if (typeof type === "object" && Object.keys(type).length === 0) return true;
+  
+  return false;
+}
+
 export function call(target: string, ...args: Children[]) {
   return <FunctionCallExpression target={target} args={args} />;
 }
@@ -161,4 +205,16 @@ export function call(target: string, ...args: Children[]) {
 export function sanitizePropertyName(name: string): string {
   // Remove characters that are invalid in JavaScript identifiers like @, backticks, etc.
   return name.replace(/[`@]/g, '');
+}
+
+/**
+ * Handles unresolved symbols by creating a z.unknown() type with appropriate comment
+ * 
+ * @param modelName The name of the model containing the unresolved symbol
+ * @param propertyName The name of the property with the unresolved symbol
+ * @returns A string representing z.unknown() with a comment
+ */
+export function handleUnresolvedSymbol(modelName: string, propertyName: string): string {
+  console.log(`Model ${modelName} property ${propertyName} has an unresolved symbol due to circular, parent, or namespace references.  Ddefaulting to z.unknown().`);
+  return "z.unknown() /* This model has an unresolved symbol due to circular, parent, or namespace references.  Defaulting to z.unknown() */";
 }

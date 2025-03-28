@@ -87,8 +87,22 @@ export function arrayConstraints(type: Model | ModelProperty) {
 export function docBuilder(type: Type): Children[] {
   const doc = $.type.getDoc(type);
   if (doc) {
-    return [call("describe", `"${doc.replace(/\n+/g, " ")}"`)];
+    return [call("describe", `"${sanitizeDescription(doc)}"`)];
   }
 
   return [];
+}
+
+/**
+ * Sanitizes a description string to make it safe for use in Zod schema descriptions.
+ * Handles problematic characters like pipe symbols and removes newlines.
+ * 
+ * @param description The original description text
+ * @returns A sanitized version of the description
+ */
+function sanitizeDescription(description: string): string {
+  return description
+    .replace(/\n+/g, " ")      // Replace newlines with space
+    .replace(/\|/g, "\\|")     // Escape pipe characters
+    .replace(/"/g, '\\"');     // Escape quotes
 }

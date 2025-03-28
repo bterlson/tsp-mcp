@@ -12,6 +12,18 @@ import { unionBuilder } from "./union.jsx";
 
 export function typeBuilder(type: Type): Children[] {
   const components: Children[] = [];
+  
+  // Check if this might be an unresolved symbol 
+  // (we can't directly check for "UnresolvedType" as it's not in the type union)
+  if ((type as any).__unresolved === true || (type as any).kind === "UnresolvedType") {
+    const modelName = getModelName(type) || "Unknown";
+    const propertyName = getPropertyName(type) || "Unknown";
+    
+    console.log(`Model ${modelName} property ${propertyName} has an unresolved symbol, defaulting to z.unknown().`);
+    components.push(call("unknown"));
+    return components;
+  }
+  
   switch (type.kind) {
     case "Intrinsic":
       components.push(...intrinsicBuilder(type));
@@ -47,8 +59,23 @@ export function typeBuilder(type: Type): Children[] {
       components.push(...tupleBuilder(type));
       break;
     default:
-      components.push(call("any"));
+      console.log(`Unhandled type kind: ${type.kind || "unknown"}, defaulting to z.unknown().`);
+      components.push(call("unknown"));
   }
 
   return components;
+}
+
+/**
+ * Try to get the model name from a type
+ */
+function getModelName(type: Type): string | undefined {
+  return (type as any).parent?.name || (type as any).modelName;
+}
+
+/**
+ * Try to get the property name from a type
+ */
+function getPropertyName(type: Type): string | undefined {
+  return (type as any).name || (type as any).propertyName;
 }

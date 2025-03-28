@@ -3,10 +3,23 @@ import { ArrayExpression } from "@alloy-js/typescript";
 import { getDiscriminatedUnion, ignoreDiagnostics, Union } from "@typespec/compiler";
 import { $ } from "@typespec/compiler/experimental/typekit";
 import { ZodType } from "../components/ZodType.jsx";
-import { call } from "../utils.jsx";
+import { call, isUnresolvedSymbol } from "../utils.jsx";
 
 export function unionBuilder(type: Union) {
   const discriminated = ignoreDiagnostics(getDiscriminatedUnion($.program, type));
+
+  // Check for unresolved symbols in the union variants
+  const hasUnresolvedVariants = Array.from(type.variants.values()).some(variant => 
+    isUnresolvedSymbol(variant.type)
+  );
+  
+  if (hasUnresolvedVariants) {
+    console.log(`Union ${type.name || "anonymous"} has unresolved symbols in variants due to circular, parent, or namespace references.  Defaulting to z.unknown()`);
+    return [
+      call("unknown"),
+      call("describe", "\"This union has unresolved symbols in variants due to circular, parent, or namespace references.  Defaulting to z.unknown()\"")
+    ];
+  }
 
   if ($.union.isExpression(type) || !discriminated) {
     return [
