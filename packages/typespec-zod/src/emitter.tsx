@@ -93,11 +93,6 @@ export async function $onEmit(context: EmitContext) {
  * @returns A collection of all defined models in the spec
  */
 function getModels() {
-  // This method is temporary until we have a way to get models in reference order from the efv2 team.
-  // Currently, the models are emitted in the order they are found in the spec, which can cause issues.
-  // In the interim, make sure to define models in the TypeSpec in reference-order or you may get errors
-  // when emitting the models.
-
   const models = new Set<Model>();
 
   const globalNs = $.program.getGlobalNamespaceType();
@@ -105,10 +100,10 @@ function getModels() {
   // There might be models defined in the global namespace. For example https://bit.ly/4fTYkD6
   const globalModels = Array.from(globalNs.models.values());
 
-  // Get all namespaces defined in the spec, excluding TypeSpec namespace.
-  const specNamespaces = Array.from(globalNs.namespaces.values()).filter(
-    (ns) => !ns.name.startsWith("TypeSpec"),
-  );
+  // Get all namespaces defined in the spec, excluding TypeSpec namespace and non-user-defined namespaces.
+  const specNamespaces = Array.from(globalNs.namespaces.values())
+  .filter(model => $.type.isUserDefined(model))
+  .filter((ns) => !ns.name.startsWith("TypeSpec"));
 
   for (const ns of specNamespaces) {
     navigateType(
@@ -120,7 +115,11 @@ function getModels() {
           if (model.namespace && model.namespace.name === "TypeSpec") {
             return;
           }
-          models.add(model);
+          
+          // Only include models explicitly defined by the user
+          if ($.type.isUserDefined(model)) {
+            models.add(model);
+          }
         },
       },
       { includeTemplateDeclaration: false },
@@ -137,7 +136,11 @@ function getModels() {
 function getEnums() {
   const enums = new Set<Enum>();
   const globalNs = $.program.getGlobalNamespaceType();
-  const globalEnums = Array.from(globalNs.enums.values());
+  
+  // Filter to only include user-defined enums from the global namespace
+  const globalEnums = Array.from(globalNs.enums.values())
+    .filter(enumType => $.type.isUserDefined(enumType));
+    
   const specNamespaces = Array.from(globalNs.namespaces.values()).filter(
     (ns) => !ns.name.startsWith("TypeSpec"),
   );
@@ -147,7 +150,10 @@ function getEnums() {
       ns,
       {
         enum(enumType) {
-          enums.add(enumType);
+          // Only include enums explicitly defined by the user
+          if ($.type.isUserDefined(enumType)) {
+            enums.add(enumType);
+          }
         },
       },
       { includeTemplateDeclaration: false },
