@@ -1,7 +1,7 @@
 import { code, List, refkey } from "@alloy-js/core";
 import { FunctionCallExpression } from "@alloy-js/typescript";
 import { Model, Type } from "@typespec/compiler";
-import { keyName, resourceName, toolNameForType, debugLog, isErrorModel, sanitizePropertyName } from "../utils.jsx";
+import { keyName, resourceName, toolNameForType, debugLog, isErrorModel } from "../utils.jsx";
 import { FetchCall } from "./FetchCall.jsx";
 import { JsonToolCallResponse } from "./JsonToolCallResponse.jsx";
 import { CaseClause } from "./move-to-alloy/CaseClause.jsx";
@@ -41,15 +41,29 @@ export interface ArgMarshallingProps {
 }
 
 export function ArgMarshalling(props: ArgMarshallingProps) {
-  const hasId = props.action !== "list" && props.action !== "create";
+  const hasId = props.action === "get" || props.action === "update" || props.action === "delete";
   const hasBody = props.action === "create" || props.action === "update";
 
   if (!hasId && !hasBody) {
     return null;
   }
 
-  // Remove the destructuring that's causing problems by always using `args` pattern
-  let bindingPattern = `args`;
+  // Get the correct ID field name for this type
+  const idField = keyName(props.type as Model);
+  
+  // Use different patterns for different operations
+  let bindingPattern;
+  
+  if (props.action === "get" || props.action === "delete") {
+    // For get and delete, destructure the ID field
+    bindingPattern = `{ ${idField} }`;
+  } else if (props.action === "update") {
+    // For update, destructure ID field and rest of args
+    bindingPattern = `{ ${idField}, ...args }`;
+  } else {
+    // For create, use args pattern
+    bindingPattern = "args";
+  }
 
   return code`const ${bindingPattern} = ${(
     <FunctionCallExpression
@@ -65,7 +79,7 @@ export interface FetchCallProps {
 }
 
 export function MakeCall(props: FetchCallProps) {
-  const hasId = props.action !== "list" && props.action !== "create";
+  const hasId = props.action === "get" || props.action === "update" || props.action === "delete";
   const hasBody = props.action === "create" || props.action === "update";
   const method =
     props.action === "list" || props.action === "get"
@@ -76,11 +90,13 @@ export function MakeCall(props: FetchCallProps) {
           ? "PATCH"
           : "DELETE";
 
-  // Use a simpler URL construction that doesn't try to access properties from args
-  // This prevents errors with undefined properties
+  // Get the correct ID field name for this type
+  const idField = keyName(props.type as Model);
+  
+  // Use the dynamically determined ID field name in the URL
   const typeName = resourceName(props.type);
   const url = hasId
-    ? `"${typeName}/id"`  // Use a generic path parameter
+    ? `"${typeName}/" + ${idField}`  // Use the correct ID field
     : `"${typeName}"`;
 
   return code`

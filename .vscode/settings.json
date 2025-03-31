@@ -3,5 +3,8 @@
         "Expresion",
         "modelcontextprotocol",
         "typekit"
-    ]
+    ],
+    "cline.vsCodeLmModelSelector": {
+        
+    }
 }
