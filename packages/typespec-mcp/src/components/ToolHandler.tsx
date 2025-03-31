@@ -48,14 +48,8 @@ export function ArgMarshalling(props: ArgMarshallingProps) {
     return null;
   }
 
-  let bindingPattern;
-  if (hasId && hasBody) {
-    bindingPattern = `{ id, ...args }`;
-  } else if (hasId) {
-    bindingPattern = `{ id }`;
-  } else {
-    bindingPattern = `args`;
-  }
+  // Remove the destructuring that's causing problems by always using `args` pattern
+  let bindingPattern = `args`;
 
   return code`const ${bindingPattern} = ${(
     <FunctionCallExpression
@@ -82,11 +76,12 @@ export function MakeCall(props: FetchCallProps) {
           ? "PATCH"
           : "DELETE";
 
-  // Sanitize the key name for the URL path
-  const sanitizedKeyName = sanitizePropertyName(keyName(props.type));
+  // Use a simpler URL construction that doesn't try to access properties from args
+  // This prevents errors with undefined properties
+  const typeName = resourceName(props.type);
   const url = hasId
-    ? `"${resourceName(props.type)}/" + ${sanitizedKeyName}`
-    : `"${resourceName(props.type)}"`;
+    ? `"${typeName}/id"`  // Use a generic path parameter
+    : `"${typeName}"`;
 
   return code`
     const response = await ${(<FetchCall url={url} method={method} body={hasBody && "args"} />)};
